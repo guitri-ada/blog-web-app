@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
+import '.src/styles/UserProfile.css';
 
 const UserProfile = () => {
     const { username } = useParams();
@@ -27,9 +28,15 @@ const UserProfile = () => {
     if (error) return <div>{error}</div>;
 
     return (
-        <div>
-            <h1>User Profile</h1>
-            <pre>{JSON.stringify(profile, null, 2)}</pre>
+        <div className="container">
+            <div className="card">
+                <h2 className="heading">{profile.name}</h2>
+                <p className="paragraph"><strong>Username:</strong> {profile.username}</p>
+                <p className="paragraph"><strong>First Name:</strong> {profile.firstname}</p>
+                <p className="paragraph"><strong>Last Name:</strong> {profile.lastname}</p>
+                <p className="paragraph"><strong>Email:</strong> {profile.email}</p>
+                <p className="paragraph"><strong>Bio:</strong> {profile.bio}</p>
+            </div>
         </div>
     );
 };
