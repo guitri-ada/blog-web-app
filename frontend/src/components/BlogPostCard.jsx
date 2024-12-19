@@ -1,12 +1,23 @@
 import React from 'react';
-import { Box, Typography } from '@mui/material';
+import { Card, CardContent, Typography, Box } from '@mui/material';
 
 const BlogPostCard = ({ post }) => {
     return (
-        <Box mb={3} p={2} border={1} borderColor="grey.300">
-            <Typography variant="h6">{post.title}</Typography>
-            <Typography variant="body1">{post.content}</Typography>
-        </Box>
+        <Card sx={{ marginBottom: 2, boxShadow: 3 }}>
+            <CardContent>
+                <Typography variant="h6" gutterBottom>
+                    {post.title}
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                    {post.content}
+                </Typography>
+                <Box mt={2} textAlign="right">
+                    <Typography variant="caption" color="text.secondary">
+                        Posted on: {new Date(post.createdAt).toLocaleDateString()}
+                    </Typography>
+                </Box>
+            </CardContent>
+        </Card>
     );
 };
 
