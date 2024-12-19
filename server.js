@@ -21,10 +21,11 @@ mongoose.connect(MONGO_URI, {
 
 // > Blog post
 const blogPostRoutes = require('./routes/blogPostRoute');
-app.use('/api/blogPosts', blogPostRoutes);
+app.use('/api/blogposts', blogPostRoutes);
 
 // > User
 
+ 
 // > etc...
 
 

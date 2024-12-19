@@ -12,6 +12,17 @@ router.get('/', async (req, res) => {
     }
 });
 
+// Get a single blog post by ID
+router.get('/:id', async (req, res) => {
+    try {
+        const post = await BlogPost.findById(req.params.id);
+        if (!post) return res.status(404).json({ error: 'Post not found' });
+        res.json(post);
+    } catch (error) {
+        res.status(500).json({ error: 'Failed to fetch blog post' });
+    }
+});
+
 // Create a new blog post
 router.post('/', async (req, res) => {
     const { title, content } = req.body;
@@ -28,5 +39,39 @@ router.post('/', async (req, res) => {
         res.status(500).json({ error: 'Failed to create blog post' });
     }
 });
+
+// Delete a blog post by its ID
+router.delete('/:id', async (req, res) => {
+    try {
+        const post = await BlogPost.findByIdAndDelete(req.params.id);
+        if (!post) return res.status(404).json({ error: 'Post not found' });
+        res.json(post);
+    } catch (error) {
+        res.status(500).json({ error: 'Failed to delete blog post' });
+    }
+});
+
+// Update a blog post by its ID
+router.put('/:id', async (req, res) => {
+    const { title, content } = req.body;
+
+    if (!title ||!content) {
+        return res.status(400).json({ error: 'Title and content are required' });
+    }
+
+    try {
+        const updatedPost = await BlogPost.findByIdAndUpdate(
+            req.params.id,
+            { title, content },
+            { new: true }
+        );
+
+        if (!updatedPost) return res.status(404).json({ error: 'Post not found' });
+        res.json(updatedPost);
+    } catch (error) {
+        res.status(500).json({ error: 'Failed to update blog post' });
+    }
+});
+
 
 module.exports = router;
