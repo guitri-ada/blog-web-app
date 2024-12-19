@@ -24,6 +24,8 @@ const blogPostRoutes = require('./routes/blogPostRoute');
 app.use('/api/blogPosts', blogPostRoutes);
 
 // > User
+const userProfilesRoute = require('./routes/userProfilesRoute');
+app.use('/api/userProfiles', userProfilesRoute);
 
 // > etc...
 
