@@ -19,14 +19,14 @@ router.get('/:username', async (req, res) => {
 
 // Create a new user profile
 router.post('/', async (req, res) => {
-    const { username, email, bio } = req.body;
+    const { username, email, firstname, lastname, bio } = req.body;
 
-    if (!username || !email) {
-        return res.status(400).json({ error: 'Username and email are required' });
+    if (!username || !email || !firstname || !lastname) {
+        return res.status(400).json({ error: 'Username, email, firstname, and lastname are required' });
     }
 
     try {
-        const newUserProfile = new UserProfiles({ username, email, bio });
+        const newUserProfile = new UserProfiles({ username, email, firstname, lastname, bio });
         await newUserProfile.save();
         res.status(201).json(newUserProfile);
     } catch (error) {
