@@ -1,21 +1,35 @@
 require('dotenv').config(); // Load environment variables from .env file
 const express = require('express');
-const mongoose = require('mongoose');
+const { MongoClient, ServerApiVersion } = require('mongodb');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
-const MONGO_URI = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/blogApp';
+const ATLAS_URI = process.env.ATLAS_URI;
 
 // Middleware
 app.use(express.json());
 
-// MongoDB Connection
-mongoose.connect(MONGO_URI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-})
-    .then(() => console.log('Connected to MongoDB'))
-    .catch((err) => console.error('MongoDB connection error:', err));
+// MongoDB Connection (Atlas)
+async function connectAtlas() {
+  const client = new MongoClient(ATLAS_URI, {
+      serverApi: {
+          version: ServerApiVersion.v1,
+          strict: true,
+          deprecationErrors: true,
+      }
+  });
+
+  try {
+      await client.connect();
+      await client.db("admin").command({ ping: 1 });
+      console.log("Pinged your deployment. You successfully connected to MongoDB Atlas!");
+  } finally {
+      await client.close();
+  }
+}
+
+
+connectAtlas().catch(console.dir);
 
 // Routes
 
