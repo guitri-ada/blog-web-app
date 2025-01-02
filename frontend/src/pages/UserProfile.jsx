@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { Container, Typography, Box,  Avatar } from '@mui/material';
+import { Container, Typography, Box, Avatar } from '@mui/material';
 import axios from 'axios';
 import useUserProfile from '../hooks/useUserProfile';
 import ProfileDisplay from '../components/ProfileDisplay';
@@ -14,6 +14,7 @@ const UserProfile = () => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [openDialog, setOpenDialog] = useState(false);
   const [openCreateDialog, setOpenCreateDialog] = useState(false);
+  const [tempImage, setTempImage] = useState(null);
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -66,6 +67,17 @@ const UserProfile = () => {
     }
   };
 
+  const handleImageUpload = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setTempImage(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   const open = Boolean(anchorEl);
   const id = open ? 'simple-popover' : undefined;
 
@@ -78,9 +90,9 @@ const UserProfile = () => {
         <Typography variant="h4" component="h1" gutterBottom>
           Profile Page
         </Typography>
-        <Avatar alt="Profile Picture" src={profile.pictureUrl} sx={{ width: 100, height: 100, marginBottom: 2 }} />
+        <Avatar alt="Profile Picture" src={tempImage || profile.pictureUrl} sx={{ width: 400, height: 400, marginBottom: 2 }} />
         <ProfileDisplay profile={profile} />
-        <ProfileActions handleClick={handleClick} setOpenDialog={setOpenDialog} setOpenCreateDialog={setOpenCreateDialog} />
+        <ProfileActions handleClick={handleClick} setOpenDialog={setOpenDialog} setOpenCreateDialog={setOpenCreateDialog} handleImageUpload={handleImageUpload} />
         <ProfileDialogs
           id={id}
           open={open}
