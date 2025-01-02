@@ -1,36 +1,86 @@
 const express = require('express');
+
 const router = express.Router();
-const UserProfiles = require('../models/UserProfiles');
 
-// Get a specific user profile by username
-router.get('/:username', async (req, res) => {
-    const { username } = req.params;
-
+// Route to get all UserProfiles
+router.get('/', async (req, res) => {
     try {
-        const userProfile = await UserProfiles.findOne({ username });
-        if (!userProfile) {
-            return res.status(404).json({ error: 'User profile not found' });
-        }
-        res.json(userProfile);
+        const db = req.db;
+        const userProfiles = await db.collection('UserProfiles').find().toArray();
+        res.status(200).json(userProfiles);
     } catch (error) {
-        res.status(500).json({ error: 'Failed to fetch user profile' });
+        res.status(500).json({ message: error.message });
     }
 });
 
-// Create a new user profile
-router.post('/', async (req, res) => {
-    const { username, email, firstname, lastname, bio } = req.body;
-
-    if (!username || !email || !firstname || !lastname) {
-        return res.status(400).json({ error: 'Username, email, firstname, and lastname are required' });
-    }
-
+// Route to get a UserProfile by username
+router.get('/:username', async (req, res) => {
     try {
-        const newUserProfile = new UserProfiles({ username, email, firstname, lastname, bio });
-        await newUserProfile.save();
-        res.status(201).json(newUserProfile);
+        const db = req.db;
+        const username = req.params.username;
+        const userProfile = await db.collection('UserProfiles').findOne({ username: username });
+        if (userProfile) {
+            res.status(200).json(userProfile);
+        } else {
+            res.status(404).json({ message: 'User not found' });
+        }
     } catch (error) {
-        res.status(500).json({ error: 'Failed to create user profile' });
+        res.status(500).json({ message: error.message });
+    }
+});
+
+// Route to edit an existing UserProfile
+router.post('/:username', async (req, res) => {
+    try {
+        const db = req.db;
+        const username = req.params.username;
+        const updateData = req.body;
+
+        const result = await db.collection('UserProfiles').updateOne(
+            { username: username },
+            { $set: updateData }
+        );
+
+        if (result.matchedCount > 0) {
+            res.status(200).json({ message: 'User profile updated successfully' });
+        } else {
+            res.status(404).json({ message: 'User not found' });
+        }
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+});
+
+
+// Route to create a new UserProfile
+router.post('/', async (req, res) => {
+    try {
+        const db = req.db;
+        const newUserProfile = req.body;
+
+        const result = await db.collection('UserProfiles').insertOne(newUserProfile);
+
+        res.status(201).json({ message: 'User profile created successfully', userProfile: result.ops[0] });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+});
+
+// Route to delete a UserProfile
+router.delete('/:username', async (req, res) => {
+    try {
+        const db = req.db;
+        const username = req.params.username;
+
+        const result = await db.collection('UserProfiles').deleteOne({ username: username });
+
+        if (result.deletedCount > 0) {
+            res.status(200).json({ message: 'User profile deleted successfully' });
+        } else {
+            res.status(404).json({ message: 'User not found' });
+        }
+    } catch (error) {
+        res.status(500).json({ message: error.message });
     }
 });
 
