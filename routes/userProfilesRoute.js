@@ -52,15 +52,18 @@ router.post('/:username', async (req, res) => {
 });
 
 
-// Route to create a new UserProfile
+// Combined route to create and verify a new UserProfile
 router.post('/', async (req, res) => {
     try {
         const db = req.db;
         const newUserProfile = req.body;
-
-        const result = await db.collection('UserProfiles').insertOne(newUserProfile);
-
-        res.status(201).json({ message: 'User profile created successfully', userProfile: result.ops[0] });
+        await db.collection('UserProfiles').insertOne(newUserProfile);
+        const userProfile = await db.collection('UserProfiles').findOne({ username: newUserProfile.username });
+        if (userProfile) {
+            res.status(201).json({ message: 'User profile created and verified successfully', userProfile });
+        } else {
+            res.status(500).json({ message: 'Failed to verify user profile after creation' });
+        }
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
