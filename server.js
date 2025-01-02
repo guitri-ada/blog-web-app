@@ -9,27 +9,28 @@ const ATLAS_URI = process.env.ATLAS_URI;
 // Middleware
 app.use(express.json());
 
-// MongoDB Connection (Atlas)
-async function connectAtlas() {
-  const client = new MongoClient(ATLAS_URI, {
-      serverApi: {
-          version: ServerApiVersion.v1,
-          strict: true,
-          deprecationErrors: true,
-      }
-  });
+let db;
 
-  try {
-      await client.connect();
-      await client.db("admin").command({ ping: 1 });
-      console.log("Pinged your deployment. You successfully connected to MongoDB Atlas!");
-  } finally {
-      await client.close();
-  }
+// Connect to MongoDB Atlas
+async function connectToDatabase() {
+    const client = new MongoClient(ATLAS_URI, {
+        serverApi: {
+            version: ServerApiVersion.v1,
+            strict: true,
+            deprecationErrors: true,
+        }
+    });
+
+    try {
+        await client.connect();
+        db = client.db('blog_app');
+        console.log("Connected to MongoDB Atlas!");
+    } catch (error) {
+        console.error(error);
+    }
 }
 
-
-connectAtlas().catch(console.dir);
+connectToDatabase().catch(console.dir);
 
 // Routes
 
@@ -39,11 +40,12 @@ app.use('/api/blogPosts', blogPostRoutes);
 
 // > User
 const userProfilesRoute = require('./routes/userProfilesRoute');
-app.use('/api/userProfiles', userProfilesRoute);
+app.use('/api/userProfiles', (req, res, next) => {
+    req.db = db;
+    next();
+}, userProfilesRoute);
 
 // > etc...
-
-
 
 // Root route for status check
 app.get('/', (req, res) => {
