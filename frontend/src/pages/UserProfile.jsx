@@ -1,44 +1,105 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
+import { Container, Typography, Box } from '@mui/material';
+import axios from 'axios';
+import useUserProfile from '../hooks/useUserProfile';
+import ProfileDisplay from '../components/ProfileDisplay';
+import ProfileActions from '../components/ProfileActions';
+import ProfileDialogs from '../components/ProfileDialogs';
 import '../styles/UserProfile.css';
 
 const UserProfile = () => {
-    const { username } = useParams();
-    const [profile, setProfile] = useState(null);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState('');
+  const { username } = useParams();
+  const { profile, loading, error, formData, handleChange, setProfile, setFormData, setLoading, setError } = useUserProfile(username);
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [openDialog, setOpenDialog] = useState(false);
+  const [openCreateDialog, setOpenCreateDialog] = useState(false);
 
-    useEffect(() => {
-        const fetchProfile = async () => {
-            try {
-                const response = await axios.get(`/api/userProfiles/${username}`);
-                setProfile(response.data);
-                setLoading(false);
-            } catch (err) {
-                setError('Failed to fetch user profile');
-                setLoading(false);
-            }
-        };
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
 
-        fetchProfile();
-    }, [username]);
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
 
-    if (loading) return <div>Loading...</div>;
-    if (error) return <div>{error}</div>;
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      await axios.post(`/api/userProfiles/${username}`, formData);
+      alert('Profile updated successfully');
+      handleClose();
+      window.location.reload();
+    } catch (err) {
+      setError('Failed to update profile');
+      console.log(err);
+    }
+  };
 
-    return (
-        <div className="container">
-            <div className="card">
-                <h2 className="heading">{profile.name}</h2>
-                <p className="paragraph"><strong>Username:</strong> {profile.username}</p>
-                <p className="paragraph"><strong>First Name:</strong> {profile.firstname}</p>
-                <p className="paragraph"><strong>Last Name:</strong> {profile.lastname}</p>
-                <p className="paragraph"><strong>Email:</strong> {profile.email}</p>
-                <p className="paragraph"><strong>Bio:</strong> {profile.bio}</p>
-            </div>
-        </div>
-    );
+  const handleCreateSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await axios.post(`/api/userProfiles`, formData);
+      if (response.status === 201) {
+        console.log('Profile created and verified successfully:', response.data);
+        handleClose();
+        alert('Profile successfully created');
+        window.location.reload();
+      } else {
+        console.error('Profile creation or verification failed:', response.data);
+        setError('Failed to create profile');
+      }
+    } catch (err) {
+      console.error('Error creating or verifying profile:', err);
+      setError('Failed to create profile');
+    }
+  };
+
+  const handleDelete = async () => {
+    try {
+      await axios.delete(`/api/userProfiles/${username}`);
+      alert('Profile deleted successfully');
+      setOpenDialog(false);
+      window.location.href = '/';
+    } catch (err) {
+      setError('Failed to delete profile');
+    }
+  };
+
+  const open = Boolean(anchorEl);
+  const id = open ? 'simple-popover' : undefined;
+
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>{error}</div>;
+
+  return (
+    <Container>
+      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh' }}>
+        <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}>
+          <Typography variant="h4" component="h1" gutterBottom>
+            Your Profile
+          </Typography>
+          <ProfileDisplay profile={profile} />
+          <ProfileActions handleClick={handleClick} setOpenDialog={setOpenDialog} setOpenCreateDialog={setOpenCreateDialog} />
+          <ProfileDialogs
+            id={id}
+            open={open}
+            anchorEl={anchorEl}
+            handleClose={handleClose}
+            openDialog={openDialog}
+            setOpenDialog={setOpenDialog}
+            handleDelete={handleDelete}
+            openCreateDialog={openCreateDialog}
+            setOpenCreateDialog={setOpenCreateDialog}
+            formData={formData}
+            handleChange={handleChange}
+            handleSubmit={handleSubmit}
+            handleCreateSubmit={handleCreateSubmit}
+          />
+        </Box>
+      </Box>
+    </Container>
+  );
 };
 
 export default UserProfile;
