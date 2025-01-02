@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { Container, Typography, Box } from '@mui/material';
+import { Container, Typography, Box,  Avatar } from '@mui/material';
 import axios from 'axios';
 import useUserProfile from '../hooks/useUserProfile';
 import ProfileDisplay from '../components/ProfileDisplay';
@@ -74,29 +74,28 @@ const UserProfile = () => {
 
   return (
     <Container>
-      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh' }}>
-        <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}>
-          <Typography variant="h4" component="h1" gutterBottom>
-            Your Profile
-          </Typography>
-          <ProfileDisplay profile={profile} />
-          <ProfileActions handleClick={handleClick} setOpenDialog={setOpenDialog} setOpenCreateDialog={setOpenCreateDialog} />
-          <ProfileDialogs
-            id={id}
-            open={open}
-            anchorEl={anchorEl}
-            handleClose={handleClose}
-            openDialog={openDialog}
-            setOpenDialog={setOpenDialog}
-            handleDelete={handleDelete}
-            openCreateDialog={openCreateDialog}
-            setOpenCreateDialog={setOpenCreateDialog}
-            formData={formData}
-            handleChange={handleChange}
-            handleSubmit={handleSubmit}
-            handleCreateSubmit={handleCreateSubmit}
-          />
-        </Box>
+      <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', minHeight: '100vh', width: '75vh', border: '1px solid black' }}>
+        <Typography variant="h4" component="h1" gutterBottom>
+          Profile Page
+        </Typography>
+        <Avatar alt="Profile Picture" src={profile.pictureUrl} sx={{ width: 100, height: 100, marginBottom: 2 }} />
+        <ProfileDisplay profile={profile} />
+        <ProfileActions handleClick={handleClick} setOpenDialog={setOpenDialog} setOpenCreateDialog={setOpenCreateDialog} />
+        <ProfileDialogs
+          id={id}
+          open={open}
+          anchorEl={anchorEl}
+          handleClose={handleClose}
+          openDialog={openDialog}
+          setOpenDialog={setOpenDialog}
+          handleDelete={handleDelete}
+          openCreateDialog={openCreateDialog}
+          setOpenCreateDialog={setOpenCreateDialog}
+          formData={formData}
+          handleChange={handleChange}
+          handleSubmit={handleSubmit}
+          handleCreateSubmit={handleCreateSubmit}
+        />
       </Box>
     </Container>
   );
