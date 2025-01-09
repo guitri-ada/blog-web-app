@@ -29,7 +29,6 @@ async function connectAtlas() {
   }
 }
 
-
 connectAtlas().catch(console.dir);
 
 // Routes
@@ -38,11 +37,9 @@ connectAtlas().catch(console.dir);
 const blogPostRoutes = require('./routes/blogPostRoute');
 app.use('/api/blogPosts', blogPostRoutes);
 
-// > User
-
-// > etc...
-
-
+// > User authentication
+const authRoute = require('./routes/authRoute');
+app.use('/api/auth', authRoute);
 
 // Root route for status check
 app.get('/', (req, res) => {
