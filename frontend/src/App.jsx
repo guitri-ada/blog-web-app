@@ -1,12 +1,23 @@
-import React from 'react';
-import Button from '@mui/material/Button';
+import React, { useState } from 'react';
+import LoginForm from './components/LoginForm';
+import RegisterForm from './components/RegisterForm';
 
-function App() {
-  return (
-    <div style={{ padding: '20px', textAlign: 'center' }}>
-      <h1>Blog Web App!</h1>
-    </div>
-  );
-}
+const App = () => {
+    const [token, setToken] = useState(null);
+
+    return (
+        <div>
+            <h1>Welcome to the Blog App</h1>
+            {!token ? (
+                <>
+                    <LoginForm onLogin={setToken} />
+                    <RegisterForm />
+                </>
+            ) : (
+                <button onClick={() => setToken(null)}>Logout</button>
+            )}
+        </div>
+    );
+};
 
 export default App;
