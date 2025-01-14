@@ -10,7 +10,7 @@ function App() {
             <Box p={2}>
                 {/* Navigation */}
                 <Box mb={4} textAlign="center">
-                    <Button component={Link} to="/" variant="outlined" sx={{ mx: 2 }}>
+                    <Button component={Link} to="/blogposts" variant="outlined" sx={{ mx: 2 }}>
                         Blog Posts
                     </Button>
                     <Button component={Link} to="/new" variant="outlined" sx={{ mx: 2 }}>
@@ -20,7 +20,7 @@ function App() {
 
                 {/* Define Routes */}
                 <Routes>
-                    <Route path="/" element={<BlogPosts />} /> {/* Updated Route */}
+                    <Route path="/blogposts" element={<BlogPosts />} /> {/* Updated Route */}
                     <Route path="/new" element={<NewBlogPost />} />
                 </Routes>
             </Box>
