@@ -1,11 +1,19 @@
 import React from 'react';
-import Button from '@mui/material/Button';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import UserProfile from './pages/UserProfile';
 
 function App() {
   return (
-    <div style={{ padding: '20px', textAlign: 'center' }}>
-      <h1>Blog Web App!</h1>
-    </div>
+    <Router>
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh', width: '100vw', textAlign: 'center' }}>
+        <div>
+          <h1>Blog Web App!</h1>
+          <Routes>
+            <Route path="/profile/:username" element={<UserProfile />} />
+          </Routes>
+        </div>
+      </div>
+    </Router>
   );
 }
 
