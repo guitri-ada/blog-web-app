@@ -1,52 +1,29 @@
 require('dotenv').config(); // Load environment variables from .env file
 const express = require('express');
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const mongoose = require('mongoose'); // Import Mongoose
 
 const app = express();
 const PORT = process.env.PORT || 5000;
-const ATLAS_URI = process.env.ATLAS_URI;
+const ATLAS_URI = process.env.ATLAS_URI; // Connection string for MongoDB Atlas
 
 // Middleware
 app.use(express.json());
 
-let db;
-
-// Connect to MongoDB Atlas
-async function connectToDatabase() {
-    const client = new MongoClient(ATLAS_URI, {
-        serverApi: {
-            version: ServerApiVersion.v1,
-            strict: true,
-            deprecationErrors: true,
-        }
+// Connect to MongoDB Atlas using Mongoose
+mongoose.connect(ATLAS_URI)
+    .then(() => {
+        console.log("Connected to MongoDB Atlas!");
+    })
+    .catch((error) => {
+        console.error("Error connecting to MongoDB Atlas", error);
     });
 
-    try {
-        await client.connect();
-        db = client.db('blog_app');
-        console.log("Connected to MongoDB Atlas!");
-    } catch (error) {
-        console.error(error);
-    }
-}
-
-connectToDatabase().catch(console.dir);
-
 // Routes
-
-// > Blog post
 const blogPostRoutes = require('./routes/blogPostRoute');
 app.use('/api/blogposts', blogPostRoutes);
 
-// > User
 const userProfilesRoute = require('./routes/userProfilesRoute');
-app.use('/api/userProfiles', (req, res, next) => {
-    req.db = db;
-    next();
-}, userProfilesRoute);
-
- 
-// > etc...
+app.use('/api/userProfiles', userProfilesRoute);
 
 // Root route for status check
 app.get('/', (req, res) => {

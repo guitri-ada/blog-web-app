@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
-import axios from 'axios';
-import { Box, TextField, Button, Typography } from '@mui/material';
+import { TextField, Button, Box, Typography } from '@mui/material';
 
-const NewBlogPost = () => {
+const BlogPostForm = ({ onCreate }) => {
     const [newPost, setNewPost] = useState({ title: '', content: '' });
 
     const handleSubmit = () => {
@@ -11,17 +10,13 @@ const NewBlogPost = () => {
             return;
         }
 
-        axios.post('/api/blogposts', newPost)
-            .then(() => {
-                setNewPost({ title: '', content: '' });
-                alert('Blog post created successfully!');
-            })
-            .catch((error) => console.error('Error creating blog post:', error));
+        onCreate(newPost);
+        setNewPost({ title: '', content: '' });
     };
 
     return (
-        <Box p={4}>
-            <Typography variant="h4" mb={4} textAlign="center">
+        <Box mt={4}>
+            <Typography variant="h6" mb={2}>
                 Create a New Blog Post
             </Typography>
             <TextField
@@ -47,4 +42,4 @@ const NewBlogPost = () => {
     );
 };
 
-export default NewBlogPost;
+export default BlogPostForm;

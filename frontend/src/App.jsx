@@ -1,17 +1,42 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
 import UserProfile from './pages/UserProfile';
+import BlogPosts from './pages/BlogPosts';
+import BlogPostForm from './pages/BlogPostForm';
 
 function App() {
   return (
     <Router>
-      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh', width: '100vw', textAlign: 'center' }}>
-        <div>
-          <h1>Blog Web App!</h1>
-          <Routes>
-            <Route path="/profile/:username" element={<UserProfile />} />
-          </Routes>
-        </div>
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          minHeight: '100vh',
+          width: '100vw',
+          textAlign: 'center',
+        }}
+      >
+        <h1>Blog Web App!</h1>
+
+        {/* Main Navigation */}
+        <nav style={{ marginBottom: '20px' }}>
+          <Link to="/blogposts" style={{ textDecoration: 'none', color: 'blue', fontSize: '18px', marginRight: '20px' }}>
+            Blog Posts
+          </Link>
+          <Link to="/profile/someusername" style={{ textDecoration: 'none', color: 'blue', fontSize: '18px' }}>
+            User Profiles
+          </Link>
+        </nav>
+
+        <Routes>
+          {/* Blog-related Routes */}
+          <Route path="/blogposts" element={<BlogPosts />} />
+          <Route path="/newblogpost" element={<BlogPostForm />} />
+
+          {/* User Profile Route */}
+          <Route path="/profile/:username" element={<UserProfile />} />
+        </Routes>
       </div>
     </Router>
   );
