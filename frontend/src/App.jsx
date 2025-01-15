@@ -1,23 +1,20 @@
-import React, { useState } from 'react';
-import LoginForm from './components/LoginForm';
-import RegisterForm from './components/RegisterForm';
+import React from 'react';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import UserProfile from './pages/UserProfile';
 
-const App = () => {
-    const [token, setToken] = useState(null);
-
-    return (
+function App() {
+  return (
+    <Router>
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh', width: '100vw', textAlign: 'center' }}>
         <div>
-            <h1>Welcome to the Blog App</h1>
-            {!token ? (
-                <>
-                    <LoginForm onLogin={setToken} />
-                    <RegisterForm />
-                </>
-            ) : (
-                <button onClick={() => setToken(null)}>Logout</button>
-            )}
+          <h1>Blog Web App!</h1>
+          <Routes>
+            <Route path="/profile/:username" element={<UserProfile />} />
+          </Routes>
         </div>
-    );
-};
+      </div>
+    </Router>
+  );
+}
 
 export default App;
