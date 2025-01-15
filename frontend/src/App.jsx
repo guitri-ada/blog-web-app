@@ -17,7 +17,9 @@ function App() {
           textAlign: 'center',
         }}
       >
-        <h1>Blog Web App!</h1>
+        <Link to="/" style={{ textDecoration: 'none', color: 'black', fontSize: '44px', fontStyle:'h4', marginBottom: '30px', marginTop: '30px' }}>
+        BLOG WEB APP
+        </Link>
 
         {/* Main Navigation */}
         <nav style={{ marginBottom: '20px' }}>
