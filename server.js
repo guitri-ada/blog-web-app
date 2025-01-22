@@ -23,9 +23,6 @@ app.use(cookieParser());
 const blogPostRoutes = require('./routes/blogPostRoute');
 app.use('/api/blogPosts', blogPostRoutes);
 
-const authRoute = require('./routes/authRoute');
-app.use('/api/auth', authRoute);
-
 const userProfilesRoute = require('./routes/userProfilesRoute');
 app.use('/api/userProfiles', userProfilesRoute);
 
