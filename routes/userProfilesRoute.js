@@ -27,39 +27,44 @@ router.get('/:username', async (req, res) => {
 
 // Route to create a new UserProfile
 router.post('/', async (req, res) => {
-    const { username, bio, avatar } = req.body;
-
-    if (!username || !bio) {
-        return res.status(400).json({ message: 'Username and bio are required' });
-    }
-
     try {
-        const newUserProfile = new UserProfiles({ username, bio, avatar });
-        await newUserProfile.save();
-        res.status(201).json(newUserProfile);
+        console.log("Request Body:", req.body);
+
+        const { username, bio, avatar } = req.body;
+        if (!username || !bio) {
+            return res.status(400).json({ message: 'Username and bio are required.' });
+        }
+
+        const newUserProfile = new UserProfiles(req.body);
+        const savedProfile = await newUserProfile.save();
+
+        res.status(201).json(savedProfile);
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        console.error("Error during profile creation:", error.message);
+        res.status(500).json({ message: 'Failed to create profile.', error: error.message });
     }
 });
+
 
 // Route to update a UserProfile
 router.put('/:username', async (req, res) => {
-    const { bio, avatar } = req.body;
-
     try {
         const updatedProfile = await UserProfiles.findOneAndUpdate(
             { username: req.params.username },
-            { bio, avatar },
+            req.body,
             { new: true, runValidators: true }
         );
+
         if (!updatedProfile) {
             return res.status(404).json({ message: 'User profile not found' });
         }
+
         res.status(200).json(updatedProfile);
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        res.status(500).json({ message: 'Failed to update profile', error: error.message });
     }
 });
+
 
 // Route to delete a UserProfile
 router.delete('/:username', async (req, res) => {

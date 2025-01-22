@@ -27,7 +27,7 @@ const UserProfile = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post(`/api/userProfiles/${username}`, formData);
+      await axios.put(`/api/userProfiles/${username}`, formData);
       alert('Profile updated successfully');
       handleClose();
       window.location.reload();
