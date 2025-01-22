@@ -5,7 +5,7 @@ const UserProfiles = require('../models/UserProfiles');
 // Route to get all UserProfiles
 router.get('/', async (req, res) => {
     try {
-        const userProfiles = await UserProfiles.find(); // Use Mongoose to fetch all profiles
+        const userProfiles = await UserProfiles.find();
         res.status(200).json(userProfiles);
     } catch (error) {
         res.status(500).json({ message: error.message });
@@ -15,7 +15,7 @@ router.get('/', async (req, res) => {
 // Route to get a UserProfile by username
 router.get('/:username', async (req, res) => {
     try {
-        const profile = await UserProfiles.findOne({ username: req.params.username }); // Use Mongoose to find by username
+        const profile = await UserProfiles.findOne({ username: req.params.username });
         if (!profile) {
             return res.status(404).json({ message: 'User profile not found' });
         }
@@ -35,7 +35,7 @@ router.post('/', async (req, res) => {
 
     try {
         const newUserProfile = new UserProfiles({ username, bio, avatar });
-        await newUserProfile.save(); // Save using Mongoose
+        await newUserProfile.save();
         res.status(201).json(newUserProfile);
     } catch (error) {
         res.status(500).json({ message: error.message });
@@ -48,9 +48,9 @@ router.put('/:username', async (req, res) => {
 
     try {
         const updatedProfile = await UserProfiles.findOneAndUpdate(
-            { username: req.params.username }, // Filter by username
-            { bio, avatar }, // Fields to update
-            { new: true, runValidators: true } // Return the updated document and enforce validations
+            { username: req.params.username },
+            { bio, avatar },
+            { new: true, runValidators: true }
         );
         if (!updatedProfile) {
             return res.status(404).json({ message: 'User profile not found' });
@@ -64,7 +64,7 @@ router.put('/:username', async (req, res) => {
 // Route to delete a UserProfile
 router.delete('/:username', async (req, res) => {
     try {
-        const deletedProfile = await UserProfiles.findOneAndDelete({ username: req.params.username }); // Delete by username
+        const deletedProfile = await UserProfiles.findOneAndDelete({ username: req.params.username });
         if (!deletedProfile) {
             return res.status(404).json({ message: 'User profile not found' });
         }
