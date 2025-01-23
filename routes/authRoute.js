@@ -93,8 +93,29 @@ router.post(
 
 // Logout Route
 router.post('/logout', csrfProtection, (req, res) => {
-  res.clearCookie('authToken');
+  res.clearCookie('authToken', {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'strict',
+  });
   res.json({ message: 'Logged out successfully!' });
 });
+
+
+// Check authentication route
+router.get('/check-auth', csrfProtection, (req, res) => {
+  const token = req.cookies.authToken;
+  if (token) {
+    try {
+      jwt.verify(token, JWT_SECRET);
+      res.status(200).json({ authenticated: true });
+    } catch (err) {
+      res.status(401).json({ authenticated: false });
+    }
+  } else {
+    res.status(401).json({ authenticated: false });
+  }
+});
+
 
 module.exports = router;

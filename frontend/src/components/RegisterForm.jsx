@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
+import AuthContext from "../contexts/AuthContext.jsx";
 
 const RegisterForm = () => {
   const [formData, setFormData] = useState({
@@ -9,6 +10,7 @@ const RegisterForm = () => {
   });
   const [message, setMessage] = useState("");
   const [csrfToken, setCsrfToken] = useState("");
+  const { isAuthenticated } = useContext(AuthContext);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -22,7 +24,12 @@ const RegisterForm = () => {
       }
     };
     fetchCsrfToken();
-  }, []);
+
+    // Redirect if already authenticated
+    if (isAuthenticated) {
+      navigate('/');
+    }
+  }, [isAuthenticated, navigate]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -40,9 +47,9 @@ const RegisterForm = () => {
         },
         body: JSON.stringify(formData),
       });
-  
+
       const data = await response.json();
-  
+
       if (response.ok) {
         setMessage(data.message || 'Registration successful!');
         setFormData({ username: '', email: '', password: '' }); // Clear the form
@@ -60,7 +67,6 @@ const RegisterForm = () => {
       setMessage('An error occurred. Please try again.');
     }
   };
-  
 
   return (
     <div style={{ maxWidth: "400px", margin: "0 auto", padding: "1em" }}>
