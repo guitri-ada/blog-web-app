@@ -7,7 +7,7 @@ import AuthContext from './contexts/AuthContext.jsx';
 import HomePage from './pages/HomePage.jsx';
 
 const AppContent = () => {
-  const { isAuthenticated, logout } = useContext(AuthContext);
+  const { isAuthenticated, logout, username } = useContext(AuthContext);
 
   return (
     <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh', width: '100vw', textAlign: 'center' }}>
@@ -16,7 +16,7 @@ const AppContent = () => {
         <nav style={{ marginBottom: '20px' }}>
           {isAuthenticated ? (
             <>
-              <Link to="/profile/:username" style={{ marginRight: '10px' }}>Profile</Link>
+              <Link to={`/profile/${username}`} style={{ marginRight: '10px' }}>Profile</Link>
               <button onClick={logout}>Logout</button>
             </>
           ) : (

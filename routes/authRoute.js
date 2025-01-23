@@ -75,7 +75,7 @@ router.post(
       }
 
       // Generate token
-      const token = jwt.sign({ id: user._id }, JWT_SECRET, { expiresIn: '1h' });
+      const token = jwt.sign({ id: user._id, username: user.username }, JWT_SECRET, { expiresIn: '1h' });
 
       res.cookie('authToken', token, {
         httpOnly: true,
@@ -83,13 +83,14 @@ router.post(
         sameSite: 'strict',
       });
 
-      res.json({ message: 'Login successful!' });
+      res.json({ message: 'Login successful!', username: user.username });
     } catch (error) {
       console.error('Error during login:', error);
       res.status(500).json({ error: 'Server error' });
     }
   }
 );
+
 
 // Logout Route
 router.post('/logout', csrfProtection, (req, res) => {
@@ -107,8 +108,8 @@ router.get('/check-auth', csrfProtection, (req, res) => {
   const token = req.cookies.authToken;
   if (token) {
     try {
-      jwt.verify(token, JWT_SECRET);
-      res.status(200).json({ authenticated: true });
+      const decoded = jwt.verify(token, JWT_SECRET);
+      res.status(200).json({ authenticated: true, username: decoded.username });
     } catch (err) {
       res.status(401).json({ authenticated: false });
     }
@@ -116,6 +117,7 @@ router.get('/check-auth', csrfProtection, (req, res) => {
     res.status(401).json({ authenticated: false });
   }
 });
+
 
 
 module.exports = router;

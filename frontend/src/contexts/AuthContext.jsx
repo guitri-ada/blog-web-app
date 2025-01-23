@@ -5,6 +5,7 @@ const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [csrfToken, setCsrfToken] = useState('');
+  const [username, setUsername] = useState('');
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -15,13 +16,17 @@ export const AuthProvider = ({ children }) => {
         });
 
         if (response.ok) {
+          const data = await response.json();
           setIsAuthenticated(true);
+          setUsername(data.username);
         } else {
           setIsAuthenticated(false);
+          setUsername('');
         }
       } catch (error) {
         console.error('Error checking authentication:', error);
         setIsAuthenticated(false);
+        setUsername('');
       }
     };
 
@@ -39,7 +44,10 @@ export const AuthProvider = ({ children }) => {
     fetchCsrfToken();
   }, []);
 
-  const login = () => setIsAuthenticated(true);
+  const login = (username) => {
+    setIsAuthenticated(true);
+    setUsername(username);
+  };
 
   const logout = async () => {
     try {
@@ -53,6 +61,7 @@ export const AuthProvider = ({ children }) => {
 
       if (response.ok) {
         setIsAuthenticated(false);
+        setUsername('');
       } else {
         console.error('Logout failed');
       }
@@ -62,7 +71,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, login, logout }}>
+    <AuthContext.Provider value={{ isAuthenticated, username, login, logout }}>
       {children}
     </AuthContext.Provider>
   );

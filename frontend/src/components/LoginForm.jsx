@@ -49,7 +49,7 @@ const LoginForm = () => {
 
       if (response.ok) {
         setMessage(data.message || 'Login successful!');
-        login();
+        login(data.username);
         setTimeout(() => navigate('/'), 2000); // Redirect after successful login
       } else {
         setMessage(data.error || 'Login failed. Please try again.');
