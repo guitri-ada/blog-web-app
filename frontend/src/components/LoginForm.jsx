@@ -1,8 +1,25 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const LoginForm = () => {
   const [formData, setFormData] = useState({ email: '', password: '' });
   const [message, setMessage] = useState('');
+  const [csrfToken, setCsrfToken] = useState('');
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    // Fetch the CSRF token from the server
+    const fetchCsrfToken = async () => {
+      try {
+        const response = await fetch('/api/csrf-token');
+        const data = await response.json();
+        setCsrfToken(data.csrfToken);
+      } catch (error) {
+        console.error('Error fetching CSRF token:', error);
+      }
+    };
+    fetchCsrfToken();
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -14,7 +31,10 @@ const LoginForm = () => {
     try {
       const response = await fetch('/api/auth/login', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Content-Type': 'application/json',
+          'CSRF-Token': csrfToken // Include the CSRF token in the headers
+        },
         body: JSON.stringify(formData),
       });
 
@@ -22,7 +42,8 @@ const LoginForm = () => {
 
       if (response.ok) {
         setMessage(data.message || 'Login successful!');
-        // Optionally handle token or session management here
+        // Redirect after successful login
+        setTimeout(() => navigate('/'), 2000);
       } else {
         setMessage(data.error || 'Login failed. Please try again.');
       }

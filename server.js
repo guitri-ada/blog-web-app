@@ -1,7 +1,9 @@
-require('dotenv').config(); // Load environment variables from .env file
+require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const cookieParser = require('cookie-parser');
+const csrf = require('csurf');
+const csrfProtection = csrf({ cookie: true });
 const app = express();
 
 const PORT = process.env.PORT || 5000;
@@ -12,12 +14,13 @@ mongoose.connect(ATLAS_URI)
   .then(() => console.log('Connected to MongoDB Atlas!'))
   .catch((error) => {
     console.error('MongoDB connection error:', error);
-    process.exit(1); // Exit if connection fails
+    process.exit(1);
   });
 
 // Middleware
 app.use(express.json()); // Parse JSON bodies
 app.use(cookieParser());
+app.use(csrfProtection);
 
 // Routes
 const blogPostRoutes = require('./routes/blogPostRoute');
@@ -33,6 +36,11 @@ app.use('/api/userProfiles', userProfilesRoute);
 app.get('/', (req, res) => {
   res.send('Server is running, and MongoDB is connected!');
 });
+
+app.get('/api/csrf-token', (req, res) => {
+  res.json({ csrfToken: req.csrfToken() });
+});
+
 
 // Start the server
 app.listen(PORT, () => {

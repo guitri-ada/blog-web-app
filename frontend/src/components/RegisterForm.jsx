@@ -1,10 +1,28 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 const RegisterForm = () => {
-  const [formData, setFormData] = useState({ username: '', email: '', password: '' });
-  const [message, setMessage] = useState('');
-  const navigate = useNavigate(); // For navigation
+  const [formData, setFormData] = useState({
+    username: "",
+    email: "",
+    password: "",
+  });
+  const [message, setMessage] = useState("");
+  const [csrfToken, setCsrfToken] = useState("");
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchCsrfToken = async () => {
+      try {
+        const response = await fetch("/api/csrf-token");
+        const data = await response.json();
+        setCsrfToken(data.csrfToken);
+      } catch (error) {
+        console.error("Error fetching CSRF token:", error);
+      }
+    };
+    fetchCsrfToken();
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -16,27 +34,36 @@ const RegisterForm = () => {
     try {
       const response = await fetch('/api/auth/register', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Content-Type': 'application/json',
+          'CSRF-Token': csrfToken
+        },
         body: JSON.stringify(formData),
       });
-
+  
       const data = await response.json();
-
+  
       if (response.ok) {
         setMessage(data.message || 'Registration successful!');
         setFormData({ username: '', email: '', password: '' }); // Clear the form
-        setTimeout(() => navigate('/login'), 2000); // Redirect to login after 2 seconds
+        setTimeout(() => navigate('/login'), 2000); // Redirect to login page
       } else {
-        setMessage(data.error || 'Registration failed. Please try again.');
+        if (data.errors && data.errors.length > 0) {
+          const validationErrors = data.errors.map(error => error.msg).join(', ');
+          setMessage(validationErrors);
+        } else {
+          setMessage(data.error || 'Registration failed. Please try again.');
+        }
       }
     } catch (error) {
       console.error('Error during registration:', error);
       setMessage('An error occurred. Please try again.');
     }
   };
+  
 
   return (
-    <div style={{ maxWidth: '400px', margin: '0 auto', padding: '1em' }}>
+    <div style={{ maxWidth: "400px", margin: "0 auto", padding: "1em" }}>
       <h2>Register</h2>
       <form onSubmit={handleSubmit}>
         <div>
