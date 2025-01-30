@@ -2,18 +2,17 @@ import React, { useContext } from 'react';
 import AuthContext from '../contexts/AuthContext';
 
 const HomePage = () => {
-  const { isAuthenticated, logout } = useContext(AuthContext);
+  const { isAuthenticated, username } = useContext(AuthContext);
 
   return (
     <div>
-      <h1>Welcome to the Home Page</h1>
+      <h1>Home Page</h1>
       {isAuthenticated ? (
         <>
-          <p>You are logged in!</p>
-          <button onClick={logout}>Logout</button>
+          <p>Welcome, {username}!</p>
         </>
       ) : (
-        <p>Please log in to access more features.</p>
+        <p>Please log in or register to view blog posts.</p>
       )}
     </div>
   );
