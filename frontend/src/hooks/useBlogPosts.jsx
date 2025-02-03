@@ -22,16 +22,38 @@ const useBlogPosts = () => {
     }, []);
 
     // Create a new blog post
-    const createPost = async (newPost) => {
+const createPost = async (newPost) => {
+    try {
+        const response = await axios.post('/api/blogposts', newPost);
+        setPosts((prevPosts) => [...prevPosts, response.data]);
+        alert('Blog post created successfully!'); 
+    } catch (err) {
+        alert('Failed to create blog post.');
+    }
+};
+
+    // Edit a blog post
+    const editPost = async (id, updatedData) => {
         try {
-            const response = await axios.post('/api/blogposts', newPost);
-            setPosts((prevPosts) => [...prevPosts, response.data]);
+            const response = await axios.put(`/api/blogposts/${id}`, updatedData);
+            setPosts((prevPosts) => prevPosts.map(post => post._id === id ? response.data : post));
         } catch (err) {
-            setError('Failed to create blog post.');
+            setError('Failed to update blog post.');
         }
     };
 
-    return { posts, loading, error, createPost };
+    // Delete a blog post
+    const deletePost = async (id) => {
+        try {
+            await axios.delete(`/api/blogposts/${id}`);
+            setPosts((prevPosts) => prevPosts.filter(post => post._id !== id));
+        } catch (err) {
+            setError('Failed to delete blog post.');
+        }
+    };
+
+    
+    return { posts, loading, error, createPost, editPost, deletePost };
 };
 
 export default useBlogPosts;
