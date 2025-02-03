@@ -1,12 +1,16 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import UserProfile from './pages/UserProfile';
+import { AuthProvider } from './contexts/AuthContext.jsx';
+import AppContent from './AppContent.jsx';
 import BlogPosts from './pages/BlogPosts';
 import BlogPostForm from './pages/BlogPostForm';
 
 function App() {
   return (
+    <AuthProvider>
     <Router>
+      <AppContent />
       <div
         style={{
           display: 'flex',
@@ -40,7 +44,8 @@ function App() {
           <Route path="/profile/:username" element={<UserProfile />} />
         </Routes>
       </div>
-    </Router>
+      </Router>
+    </AuthProvider>
   );
 }
 
