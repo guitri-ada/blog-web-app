@@ -11,7 +11,7 @@ const NewBlogPostForm = ({ onPostAdded }) => {
             return;
         }
 
-        axios.post('http://localhost:5000/api/blogposts', newPost)
+        axios.post('/api/blogposts', newPost)
             .then((response) => {
                 onPostAdded(response.data); // Notify parent about the new post
                 setNewPost({ title: '', content: '' });

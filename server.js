@@ -1,11 +1,9 @@
 require('dotenv').config();
 const express = require('express');
-const { MongoClient, ServerApiVersion } = require('mongodb');
 const mongoose = require('mongoose');
 const cookieParser = require('cookie-parser');
 const csrf = require('csurf');
 const csrfProtection = csrf({ cookie: true });
-
 const app = express();
 
 const PORT = process.env.PORT || 5000;
@@ -20,40 +18,18 @@ mongoose.connect(ATLAS_URI)
   });
 
 // Middleware
-app.use(express.json());
-
-let db;
-
-// Connect to MongoDB Atlas
-async function connectToDatabase() {
-    const client = new MongoClient(ATLAS_URI, {
-        serverApi: {
-            version: ServerApiVersion.v1,
-            strict: true,
-            deprecationErrors: true,
-        }
-    });
-
-    try {
-        await client.connect();
-        db = client.db('blog_app');
-        console.log("Connected to MongoDB Atlas!");
-    } catch (error) {
-        console.error(error);
-    }
-}
-
-connectToDatabase().catch(console.dir);
+app.use(express.json()); // Parse JSON bodies
+app.use(cookieParser());
+app.use(csrfProtection);
 
 // Routes
 const blogPostRoutes = require('./routes/blogPostRoute');
-app.use('/api/blogposts', blogPostRoutes);
+app.use('/api/blogPosts', blogPostRoutes);
 
-// > User
-const userProfilesRoute = require('./routes/userProfilesRoute');
 const authRoute = require('./routes/authRoute');
 app.use('/api/auth', authRoute);
 
+const userProfilesRoute = require('./routes/userProfilesRoute');
 app.use('/api/userProfiles', userProfilesRoute);
 
 // Root route for status check
