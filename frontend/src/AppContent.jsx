@@ -33,7 +33,7 @@ const AppContent = () => {
           <Route path="/profile/:username" element={<UserProfile />} />
           <Route path="/register" element={<RegisterForm />} />
           <Route path="/login" element={<LoginForm />} />
-          <Route path="/blogposts" element={<BlogPosts />} /> {/* Add this route */}
+          {isAuthenticated && <Route path="/blogposts" element={<BlogPosts />} />}
         </Routes>
       </div>
     </div>
