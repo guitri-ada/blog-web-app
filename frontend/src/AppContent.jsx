@@ -5,6 +5,7 @@ import RegisterForm from './components/RegisterForm';
 import LoginForm from './components/LoginForm';
 import AuthContext from './contexts/AuthContext.jsx';
 import HomePage from './pages/HomePage.jsx';
+import BlogPosts from './pages/BlogPosts'; 
 
 const AppContent = () => {
   const { isAuthenticated, logout, username } = useContext(AuthContext);
@@ -17,6 +18,7 @@ const AppContent = () => {
           {isAuthenticated ? (
             <>
               <Link to={`/profile/${username}`} style={{ marginRight: '10px' }}>Profile</Link>
+              <Link to={`/blogposts/`} style={{ marginRight: '10px' }}>Blog Posts</Link>
               <button onClick={logout}>Logout</button>
             </>
           ) : (
@@ -31,6 +33,7 @@ const AppContent = () => {
           <Route path="/profile/:username" element={<UserProfile />} />
           <Route path="/register" element={<RegisterForm />} />
           <Route path="/login" element={<LoginForm />} />
+          <Route path="/blogposts" element={<BlogPosts />} /> {/* Add this route */}
         </Routes>
       </div>
     </div>
