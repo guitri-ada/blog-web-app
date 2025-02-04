@@ -1,9 +1,10 @@
 const express = require('express');
 const router = express.Router();
 const BlogPost = require('../models/BlogPost');
+const authenticate = require('../middleware/authenticate');
 
 // Get all blog posts
-router.get('/', async (req, res) => {
+router.get('/', authenticate, async (req, res) => {
     try {
         const posts = await BlogPost.find();
         res.json(posts);

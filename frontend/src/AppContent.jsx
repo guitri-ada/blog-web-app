@@ -6,6 +6,7 @@ import LoginForm from './components/LoginForm';
 import CreateProfile from './pages/CreateProfile';
 import AuthContext from './contexts/AuthContext.jsx';
 import HomePage from './pages/HomePage.jsx';
+import BlogPosts from './pages/BlogPosts'; 
 import ProtectedRoute from './components/ProtectedRoute.jsx';
 
 const AppContent = () => {
@@ -26,6 +27,7 @@ const AppContent = () => {
           {isAuthenticated ? (
             <>
               <Link to={`/profile/${username}`} style={{ marginRight: '10px' }}>Profile</Link>
+              <Link to={`/blogposts/`} style={{ marginRight: '10px' }}>Blog Posts</Link>
               <button onClick={logout}>Logout</button>
             </>
           ) : (
@@ -41,6 +43,7 @@ const AppContent = () => {
           <Route path="/register" element={<RegisterForm />} />
           <Route path="/login" element={<LoginForm />} />
           <Route path="/create-profile" element={<ProtectedRoute requireProfile={false}><CreateProfile /></ProtectedRoute>} />
+          {isAuthenticated && <Route path="/blogposts" element={<BlogPosts />} />}
         </Routes>
       </div>
     </div>
