@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { useParams } from 'react-router-dom';
 import { Container, Typography, Box, Avatar } from '@mui/material';
 import axios from 'axios';
@@ -6,11 +6,13 @@ import useUserProfile from '../hooks/useUserProfile';
 import ProfileDisplay from '../components/ProfileDisplay';
 import ProfileActions from '../components/ProfileActions';
 import ProfileDialogs from '../components/ProfileDialogs';
+import AuthContext from '../contexts/AuthContext.jsx';
 import '../styles/UserProfile.css';
 
 const UserProfile = () => {
-  const { username } = useParams();
+  const { username } = useParams(); // Use username instead of userId
   const { profile, loading, error, formData, handleChange, setProfile, setFormData, setLoading, setError } = useUserProfile(username);
+  const { csrfToken } = useContext(AuthContext);
   const [anchorEl, setAnchorEl] = useState(null);
   const [openDialog, setOpenDialog] = useState(false);
   const [openCreateDialog, setOpenCreateDialog] = useState(false);
@@ -27,10 +29,14 @@ const UserProfile = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.put(`/api/userProfiles/${username}`, formData);
+      const response = await axios.put(`/api/userProfiles/${username}`, formData, {
+        headers: {
+          'CSRF-Token': csrfToken,
+        },
+      });
+      setProfile(response.data); // Update the profile state with the updated profile data
       alert('Profile updated successfully');
       handleClose();
-      window.location.reload();
     } catch (err) {
       setError('Failed to update profile');
       console.log(err);
@@ -40,7 +46,11 @@ const UserProfile = () => {
   const handleCreateSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post(`/api/userProfiles`, formData);
+      const response = await axios.post(`/api/userProfiles`, formData, {
+        headers: {
+          'CSRF-Token': csrfToken,
+        },
+      });
       if (response.status === 201) {
         console.log('Profile created and verified successfully:', response.data);
         handleClose();
@@ -58,7 +68,11 @@ const UserProfile = () => {
 
   const handleDelete = async () => {
     try {
-      await axios.delete(`/api/userProfiles/${username}`);
+      await axios.delete(`/api/userProfiles/${username}`, {
+        headers: {
+          'CSRF-Token': csrfToken,
+        },
+      });
       alert('Profile deleted successfully');
       setOpenDialog(false);
       window.location.href = '/';

@@ -6,10 +6,8 @@ const useUserProfile = (username) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [formData, setFormData] = useState({
-    username: '',
     firstname: '',
     lastname: '',
-    email: '',
     bio: ''
   });
 
@@ -19,10 +17,8 @@ const useUserProfile = (username) => {
         const response = await axios.get(`/api/userProfiles/${username}`);
         setProfile(response.data);
         setFormData({
-          username: response.data.username,
           firstname: response.data.firstname,
           lastname: response.data.lastname,
-          email: response.data.email,
           bio: response.data.bio
         });
         setLoading(false);

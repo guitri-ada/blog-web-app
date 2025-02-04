@@ -1,14 +1,23 @@
-import React, { useContext } from 'react';
-import { Route, Routes, Link } from 'react-router-dom';
+import React, { useContext, useEffect } from 'react';
+import { Route, Routes, Link, useNavigate } from 'react-router-dom';
 import UserProfile from './pages/UserProfile';
 import RegisterForm from './components/RegisterForm';
 import LoginForm from './components/LoginForm';
+import CreateProfile from './pages/CreateProfile';
 import AuthContext from './contexts/AuthContext.jsx';
 import HomePage from './pages/HomePage.jsx';
 import BlogPosts from './pages/BlogPosts'; 
+import ProtectedRoute from './components/ProtectedRoute.jsx';
 
 const AppContent = () => {
-  const { isAuthenticated, logout, username } = useContext(AuthContext);
+  const { isAuthenticated, logout, username, hasProfile } = useContext(AuthContext);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (isAuthenticated && !hasProfile) {
+      navigate('/create-profile');
+    }
+  }, [isAuthenticated, hasProfile, navigate]);
 
   return (
     <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh', width: '100vw', textAlign: 'center' }}>
@@ -30,9 +39,10 @@ const AppContent = () => {
         </nav>
         <Routes>
           <Route path="/" element={<HomePage />} />
-          <Route path="/profile/:username" element={<UserProfile />} />
+          <Route path="/profile/:username" element={<ProtectedRoute requireProfile={true}><UserProfile /></ProtectedRoute>} />
           <Route path="/register" element={<RegisterForm />} />
           <Route path="/login" element={<LoginForm />} />
+          <Route path="/create-profile" element={<ProtectedRoute requireProfile={false}><CreateProfile /></ProtectedRoute>} />
           {isAuthenticated && <Route path="/blogposts" element={<BlogPosts />} />}
         </Routes>
       </div>

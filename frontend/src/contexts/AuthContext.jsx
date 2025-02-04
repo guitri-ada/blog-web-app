@@ -6,6 +6,7 @@ export const AuthProvider = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [csrfToken, setCsrfToken] = useState('');
   const [username, setUsername] = useState('');
+  const [hasProfile, setHasProfile] = useState(false);
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -19,20 +20,26 @@ export const AuthProvider = ({ children }) => {
           const data = await response.json();
           setIsAuthenticated(true);
           setUsername(data.username);
+          setHasProfile(data.hasProfile);
         } else {
           setIsAuthenticated(false);
           setUsername('');
+          setHasProfile(false);
         }
       } catch (error) {
         console.error('Error checking authentication:', error);
         setIsAuthenticated(false);
         setUsername('');
+        setHasProfile(false);
       }
     };
 
     const fetchCsrfToken = async () => {
       try {
-        const response = await fetch('/api/csrf-token');
+        const response = await fetch('/api/csrf-token', {
+          method: 'GET',
+          credentials: 'include',
+        });
         const data = await response.json();
         setCsrfToken(data.csrfToken);
       } catch (error) {
@@ -44,9 +51,10 @@ export const AuthProvider = ({ children }) => {
     fetchCsrfToken();
   }, []);
 
-  const login = (username) => {
+  const login = (username, hasProfile) => {
     setIsAuthenticated(true);
     setUsername(username);
+    setHasProfile(hasProfile);
   };
 
   const logout = async () => {
@@ -62,6 +70,7 @@ export const AuthProvider = ({ children }) => {
       if (response.ok) {
         setIsAuthenticated(false);
         setUsername('');
+        setHasProfile(false);
       } else {
         console.error('Logout failed');
       }
@@ -71,7 +80,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, username, login, logout }}>
+    <AuthContext.Provider value={{ isAuthenticated, username, hasProfile, csrfToken, login, logout }}>
       {children}
     </AuthContext.Provider>
   );
