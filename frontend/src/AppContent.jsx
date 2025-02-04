@@ -39,7 +39,7 @@ const AppContent = () => {
         </nav>
         <Routes>
           <Route path="/" element={<HomePage />} />
-          <Route path="/profile/:userId" element={<ProtectedRoute requireProfile={true}><UserProfile /></ProtectedRoute>} />
+          <Route path="/profile/:username" element={<ProtectedRoute requireProfile={true}><UserProfile /></ProtectedRoute>} />
           <Route path="/register" element={<RegisterForm />} />
           <Route path="/login" element={<LoginForm />} />
           <Route path="/create-profile" element={<ProtectedRoute requireProfile={false}><CreateProfile /></ProtectedRoute>} />

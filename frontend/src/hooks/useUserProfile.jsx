@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 
-const useUserProfile = (userId) => {
+const useUserProfile = (username) => {
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -14,7 +14,7 @@ const useUserProfile = (userId) => {
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        const response = await axios.get(`/api/userProfiles/${userId}`);
+        const response = await axios.get(`/api/userProfiles/${username}`);
         setProfile(response.data);
         setFormData({
           firstname: response.data.firstname,
@@ -29,7 +29,7 @@ const useUserProfile = (userId) => {
     };
 
     fetchProfile();
-  }, [userId]);
+  }, [username]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;

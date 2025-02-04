@@ -16,10 +16,14 @@ router.get('/', async (req, res) => {
     }
 });
 
-// Route to get a UserProfile by userId
-router.get('/:userId', async (req, res) => {
+// Route to get a UserProfile by username
+router.get('/:username', async (req, res) => {
     try {
-        const profile = await UserProfiles.findOne({ user: req.params.userId });
+        const user = await User.findOne({ username: req.params.username });
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+        const profile = await UserProfiles.findOne({ user: user._id });
         if (!profile) {
             return res.status(404).json({ message: 'User profile not found' });
         }

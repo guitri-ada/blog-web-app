@@ -36,7 +36,10 @@ export const AuthProvider = ({ children }) => {
 
     const fetchCsrfToken = async () => {
       try {
-        const response = await fetch('/api/csrf-token');
+        const response = await fetch('/api/csrf-token', {
+          method: 'GET',
+          credentials: 'include',
+        });
         const data = await response.json();
         setCsrfToken(data.csrfToken);
       } catch (error) {
@@ -77,7 +80,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, username, hasProfile, login, logout }}>
+    <AuthContext.Provider value={{ isAuthenticated, username, hasProfile, csrfToken, login, logout }}>
       {children}
     </AuthContext.Provider>
   );
