@@ -9,8 +9,8 @@ import ProfileDialogs from '../components/ProfileDialogs';
 import '../styles/UserProfile.css';
 
 const UserProfile = () => {
-  const { username } = useParams();
-  const { profile, loading, error, formData, handleChange, setProfile, setFormData, setLoading, setError } = useUserProfile(username);
+  const { userId } = useParams();
+  const { profile, loading, error, formData, handleChange, setProfile, setFormData, setLoading, setError } = useUserProfile(userId);
   const [anchorEl, setAnchorEl] = useState(null);
   const [openDialog, setOpenDialog] = useState(false);
   const [openCreateDialog, setOpenCreateDialog] = useState(false);
@@ -27,7 +27,7 @@ const UserProfile = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.put(`/api/userProfiles/${username}`, formData);
+      await axios.put(`/api/userProfiles/${userId}`, formData);
       alert('Profile updated successfully');
       handleClose();
       window.location.reload();
@@ -58,7 +58,7 @@ const UserProfile = () => {
 
   const handleDelete = async () => {
     try {
-      await axios.delete(`/api/userProfiles/${username}`);
+      await axios.delete(`/api/userProfiles/${userId}`);
       alert('Profile deleted successfully');
       setOpenDialog(false);
       window.location.href = '/';

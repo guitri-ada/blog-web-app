@@ -49,8 +49,8 @@ const LoginForm = () => {
 
       if (response.ok) {
         setMessage(data.message || 'Login successful!');
-        login(data.username);
-        setTimeout(() => navigate('/'), 2000); // Redirect after successful login
+        login(data.username, data.hasProfile);
+        setTimeout(() => navigate(data.hasProfile ? '/' : '/create-profile'), 2000);
       } else {
         setMessage(data.error || 'Login failed. Please try again.');
       }
