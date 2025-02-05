@@ -49,7 +49,7 @@ const CreateProfile = () => {
       if (response.status === 200) {
         setMessage('Profile updated successfully!');
         login(username, true);
-        setTimeout(() => navigate('/'), 2000);
+        setTimeout(() => navigate('/blogposts'), 2000);
       } else {
         setMessage('Failed to update profile. Please try again.');
       }
