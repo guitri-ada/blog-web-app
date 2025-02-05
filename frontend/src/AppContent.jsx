@@ -20,7 +20,7 @@ const AppContent = () => {
   }, [isAuthenticated, hasProfile, navigate]);
 
   return (
-    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh', width: '100vw', textAlign: 'center' }}>
+    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'flex-start', minHeight: '100vh', width: '100vw', textAlign: 'center' }}>
       <div>
         <h1>Blog Web App!</h1>
         <nav style={{ marginBottom: '20px' }}>
