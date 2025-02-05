@@ -25,9 +25,15 @@ router.post(
   '/register',
   csrfProtection,
   [
-    body('username').isLength({ min: 3 }).withMessage('Username must be at least 3 characters long'),
-    body('email').isEmail().withMessage('Invalid email address'),
-    body('password').isLength({ min: 6 }).withMessage('Password must be at least 6 characters long'),
+    body('username')
+      .isLength({ min: 3 }).withMessage('Username must be at least 3 characters long')
+      .trim().escape(),
+    body('email')
+      .isEmail().withMessage('Invalid email address')
+      .normalizeEmail(),
+    body('password')
+      .isLength({ min: 6 }).withMessage('Password must be at least 6 characters long')
+      .trim().escape(),
   ],
   handleValidationErrors,
   async (req, res) => {
@@ -61,8 +67,12 @@ router.post(
   '/login',
   csrfProtection,
   [
-    body('email').isEmail().withMessage('Invalid email address'),
-    body('password').notEmpty().withMessage('Password is required'),
+    body('email')
+      .isEmail().withMessage('Invalid email address')
+      .normalizeEmail(),
+    body('password')
+      .notEmpty().withMessage('Password is required')
+      .trim().escape(),
   ],
   handleValidationErrors,
   async (req, res) => {
