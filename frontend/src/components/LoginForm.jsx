@@ -57,7 +57,12 @@ const LoginForm = () => {
         login(data.username, data.hasProfile);
         setTimeout(() => navigate(data.hasProfile ? '/' : '/create-profile'), 2000);
       } else {
-        setMessage(data.error || 'Login failed. Please try again.');
+        if (data.errors && data.errors.length > 0) {
+          const validationErrors = data.errors.map(error => error.msg).join(', ');
+          setMessage(validationErrors);
+        } else {
+          setMessage(data.error || 'Login failed. Please try again.');
+        }
       }
     } catch (error) {
       console.error('Error during login:', error);
