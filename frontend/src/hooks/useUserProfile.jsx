@@ -10,6 +10,7 @@ const useUserProfile = (username) => {
     lastname: '',
     bio: ''
   });
+  const [csrfToken, setCsrfToken] = useState('');
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -28,7 +29,17 @@ const useUserProfile = (username) => {
       }
     };
 
+    const fetchCsrfToken = async () => {
+      try {
+        const response = await axios.get('/api/csrf-token');
+        setCsrfToken(response.data.csrfToken);
+      } catch (err) {
+        console.error('Error fetching CSRF token:', err);
+      }
+    };
+
     fetchProfile();
+    fetchCsrfToken();
   }, [username]);
 
   const handleChange = (e) => {
@@ -39,7 +50,7 @@ const useUserProfile = (username) => {
     });
   };
 
-  return { profile, loading, error, formData, handleChange, setProfile, setFormData, setLoading, setError };
+  return { profile, loading, error, formData, handleChange, setProfile, setFormData, setLoading, setError, csrfToken };
 };
 
 export default useUserProfile;

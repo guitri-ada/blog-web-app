@@ -9,16 +9,6 @@ const CreateProfileDialog = ({ open, handleClose, formData, handleChange, handle
         <Box sx={{ mb: 2 }}>
           <TextField
             fullWidth
-            label="Username"
-            name="username"
-            value={formData.username}
-            onChange={handleChange}
-            variant="outlined"
-          />
-        </Box>
-        <Box sx={{ mb: 2 }}>
-          <TextField
-            fullWidth
             label="First Name"
             name="firstname"
             value={formData.firstname}
@@ -32,16 +22,6 @@ const CreateProfileDialog = ({ open, handleClose, formData, handleChange, handle
             label="Last Name"
             name="lastname"
             value={formData.lastname}
-            onChange={handleChange}
-            variant="outlined"
-          />
-        </Box>
-        <Box sx={{ mb: 2 }}>
-          <TextField
-            fullWidth
-            label="Email"
-            name="email"
-            value={formData.email}
             onChange={handleChange}
             variant="outlined"
           />

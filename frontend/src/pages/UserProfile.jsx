@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Container, Typography, Box, Avatar } from '@mui/material';
 import axios from 'axios';
@@ -6,13 +6,11 @@ import useUserProfile from '../hooks/useUserProfile';
 import ProfileDisplay from '../components/ProfileDisplay';
 import ProfileActions from '../components/ProfileActions';
 import ProfileDialogs from '../components/ProfileDialogs';
-import AuthContext from '../contexts/AuthContext.jsx';
 import '../styles/UserProfile.css';
 
 const UserProfile = () => {
-  const { username } = useParams(); // Use username instead of userId
-  const { profile, loading, error, formData, handleChange, setProfile, setFormData, setLoading, setError } = useUserProfile(username);
-  const { csrfToken } = useContext(AuthContext);
+  const { username } = useParams();
+  const { profile, loading, error, formData, handleChange, setProfile, setFormData, setLoading, setError, csrfToken } = useUserProfile(username);
   const [anchorEl, setAnchorEl] = useState(null);
   const [openDialog, setOpenDialog] = useState(false);
   const [openCreateDialog, setOpenCreateDialog] = useState(false);
@@ -31,11 +29,11 @@ const UserProfile = () => {
     try {
       const response = await axios.put(`/api/userProfiles/${username}`, formData, {
         headers: {
-          'CSRF-Token': csrfToken,
-        },
+          'CSRF-Token': csrfToken
+        }
       });
-      setProfile(response.data); // Update the profile state with the updated profile data
       alert('Profile updated successfully');
+      setProfile(response.data);
       handleClose();
     } catch (err) {
       setError('Failed to update profile');
@@ -43,35 +41,12 @@ const UserProfile = () => {
     }
   };
 
-  const handleCreateSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      const response = await axios.post(`/api/userProfiles`, formData, {
-        headers: {
-          'CSRF-Token': csrfToken,
-        },
-      });
-      if (response.status === 201) {
-        console.log('Profile created and verified successfully:', response.data);
-        handleClose();
-        alert('Profile successfully created');
-        window.location.reload();
-      } else {
-        console.error('Profile creation or verification failed:', response.data);
-        setError('Failed to create profile');
-      }
-    } catch (err) {
-      console.error('Error creating or verifying profile:', err);
-      setError('Failed to create profile');
-    }
-  };
-
   const handleDelete = async () => {
     try {
       await axios.delete(`/api/userProfiles/${username}`, {
         headers: {
-          'CSRF-Token': csrfToken,
-        },
+          'CSRF-Token': csrfToken
+        }
       });
       alert('Profile deleted successfully');
       setOpenDialog(false);
@@ -100,10 +75,7 @@ const UserProfile = () => {
 
   return (
     <Container>
-      <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', minHeight: '100vh', width: '75vh', border: '1px solid black' }}>
-        <Typography variant="h4" component="h1" gutterBottom>
-          Profile Page
-        </Typography>
+      <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', minHeight: '100vh', width: '75vh', padding: 6}}>
         <Avatar alt="Profile Picture" src={tempImage || profile.pictureUrl} sx={{ width: 400, height: 400, marginBottom: 2 }} />
         <ProfileDisplay profile={profile} />
         <ProfileActions handleClick={handleClick} setOpenDialog={setOpenDialog} setOpenCreateDialog={setOpenCreateDialog} handleImageUpload={handleImageUpload} />
@@ -120,7 +92,6 @@ const UserProfile = () => {
           formData={formData}
           handleChange={handleChange}
           handleSubmit={handleSubmit}
-          handleCreateSubmit={handleCreateSubmit}
         />
       </Box>
     </Container>
