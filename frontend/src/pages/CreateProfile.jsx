@@ -75,6 +75,7 @@ const CreateProfile = () => {
             value={formData.firstname}
             onChange={handleChange}
             required
+            inputProps={{ pattern: "^[a-zA-Z]+$" }}
           />
           <TextField
             fullWidth
@@ -85,6 +86,7 @@ const CreateProfile = () => {
             value={formData.lastname}
             onChange={handleChange}
             required
+            inputProps={{ pattern: "^[a-zA-Z]+$" }}
           />
           <TextField
             fullWidth

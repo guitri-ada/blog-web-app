@@ -51,8 +51,8 @@ router.post(
   csrfProtection,
   [
     body('userId').notEmpty().withMessage('User ID is required').trim().escape(),
-    body('firstname').optional().trim().escape(),
-    body('lastname').optional().trim().escape(),
+    body('firstname').optional().isAlpha().withMessage('First name must contain only letters').trim().escape(),
+    body('lastname').optional().isAlpha().withMessage('Last name must contain only letters').trim().escape(),
     body('bio').optional().trim().escape(),
   ],
   handleValidationErrors,
@@ -84,8 +84,8 @@ router.put(
   '/:username',
   csrfProtection,
   [
-    body('firstname').optional().trim().escape(),
-    body('lastname').optional().trim().escape(),
+    body('firstname').optional().isAlpha().withMessage('First name must contain only letters').trim().escape(),
+    body('lastname').optional().isAlpha().withMessage('Last name must contain only letters').trim().escape(),
     body('bio').optional().trim().escape(),
   ],
   handleValidationErrors,

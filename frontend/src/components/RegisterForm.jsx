@@ -90,6 +90,7 @@ const RegisterForm = () => {
             value={formData.username}
             onChange={handleChange}
             required
+            inputProps={{ pattern: "^[a-zA-Z0-9_]+$" }}
           />
           <TextField
             fullWidth
@@ -112,6 +113,7 @@ const RegisterForm = () => {
             value={formData.password}
             onChange={handleChange}
             required
+            inputProps={{ pattern: "^[a-zA-Z0-9!@#$%^&*()_+=-]+$" }}
           />
           <Button type="submit" variant="contained" color="primary" fullWidth sx={{ mt: 2 }}>
             Register
