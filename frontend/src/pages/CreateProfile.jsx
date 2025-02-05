@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import AuthContext from '../contexts/AuthContext.jsx';
+import { TextField, Button, Container, Typography, Box, Alert } from '@mui/material';
 
 const CreateProfile = () => {
   const [formData, setFormData] = useState({
@@ -41,7 +42,7 @@ const CreateProfile = () => {
       });
       if (response.status === 200) {
         setMessage('Profile updated successfully!');
-        login(username, true); // Update hasProfile state to true
+        login(username, true);
         setTimeout(() => navigate('/'), 2000);
       } else {
         setMessage('Failed to update profile. Please try again.');
@@ -53,45 +54,51 @@ const CreateProfile = () => {
   };
 
   return (
-    <div style={{ maxWidth: '400px', margin: '0 auto', padding: '1em' }}>
-      <h2>Create Profile</h2>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label htmlFor="firstname">First Name:</label>
-          <input
-            type="text"
+    <Container maxWidth="sm">
+      <Box sx={{ mt: 4 }}>
+        <Typography variant="h4" component="h1" gutterBottom>
+          Create Profile
+        </Typography>
+        <form onSubmit={handleSubmit}>
+          <TextField
+            fullWidth
+            margin="normal"
             id="firstname"
             name="firstname"
+            label="First Name"
             value={formData.firstname}
             onChange={handleChange}
             required
           />
-        </div>
-        <div>
-          <label htmlFor="lastname">Last Name:</label>
-          <input
-            type="text"
+          <TextField
+            fullWidth
+            margin="normal"
             id="lastname"
             name="lastname"
+            label="Last Name"
             value={formData.lastname}
             onChange={handleChange}
             required
           />
-        </div>
-        <div>
-          <label htmlFor="bio">Bio:</label>
-          <textarea
+          <TextField
+            fullWidth
+            margin="normal"
             id="bio"
             name="bio"
+            label="Bio"
+            multiline
+            rows={4}
             value={formData.bio}
             onChange={handleChange}
             required
           />
-        </div>
-        <button type="submit">Create Profile</button>
-      </form>
-      {message && <p>{message}</p>}
-    </div>
+          <Button type="submit" variant="contained" color="primary" fullWidth sx={{ mt: 2 }}>
+            Create Profile
+          </Button>
+        </form>
+        {message && <Alert severity="info" sx={{ mt: 2 }}>{message}</Alert>}
+      </Box>
+    </Container>
   );
 };
 
