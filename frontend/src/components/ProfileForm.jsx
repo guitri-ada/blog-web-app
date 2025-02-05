@@ -27,16 +27,6 @@ const ProfileForm = ({ formData, handleChange, handleSubmit }) => (
       <Box sx={{ mb: 2 }}>
         <TextField
           fullWidth
-          label="Email"
-          name="email"
-          value={formData.email}
-          onChange={handleChange}
-          variant="outlined"
-        />
-      </Box>
-      <Box sx={{ mb: 2 }}>
-        <TextField
-          fullWidth
           label="Bio"
           name="bio"
           value={formData.bio}
