@@ -45,7 +45,7 @@ router.post(
       await newUser.save();
 
       // Create an empty user profile
-      const newUserProfile = new UserProfiles({ user: newUser._id });
+      const newUserProfile = new UserProfiles({ user: newUser._id, email });
       await newUserProfile.save();
 
       res.status(201).json({ message: 'User registered successfully!' });
@@ -81,7 +81,7 @@ router.post(
 
       // Check if user has a profile
       const userProfile = await UserProfiles.findOne({ user: user._id });
-      const hasProfile = !!userProfile.firstname && !!userProfile.lastname && !!userProfile.bio;
+      const hasProfile = !userProfile.firstname && !userProfile.lastname && !userProfile.bio;
 
       // Generate token
       const token = jwt.sign({ id: user._id, username: user.username, hasProfile }, JWT_SECRET, { expiresIn: '1h' });
