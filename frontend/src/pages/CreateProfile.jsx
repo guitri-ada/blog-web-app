@@ -41,7 +41,7 @@ const CreateProfile = () => {
       });
       if (response.status === 200) {
         setMessage('Profile updated successfully!');
-        login(username, true); // Update hasProfile state to true
+        login(username, true);
         setTimeout(() => navigate('/'), 2000);
       } else {
         setMessage('Failed to update profile. Please try again.');

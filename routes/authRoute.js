@@ -27,6 +27,7 @@ router.post(
   [
     body('username')
       .isLength({ min: 3 }).withMessage('Username must be at least 3 characters long')
+      .matches(/^[a-zA-Z0-9_]+$/).withMessage('Username must contain only letters, numbers, and underscores')
       .trim().escape(),
     body('email')
       .isEmail().withMessage('Invalid email address')
