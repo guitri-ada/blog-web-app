@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import DOMPurify from 'dompurify';
 import AuthContext from '../contexts/AuthContext.jsx';
 
 const CreateProfile = () => {
@@ -34,7 +35,12 @@ const CreateProfile = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.put(`/api/userProfiles/${username}`, formData, {
+      const sanitizedData = {
+        firstname: DOMPurify.sanitize(formData.firstname.trim()),
+        lastname: DOMPurify.sanitize(formData.lastname.trim()),
+        bio: DOMPurify.sanitize(formData.bio.trim())
+      };
+      const response = await axios.put(`/api/userProfiles/${username}`, sanitizedData, {
         headers: {
           'CSRF-Token': csrfToken,
         },

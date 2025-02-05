@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
+import DOMPurify from 'dompurify';
 import AuthContext from '../contexts/AuthContext.jsx';
 
 const LoginForm = () => {
@@ -35,6 +36,10 @@ const LoginForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      const sanitizedData = {
+        email: DOMPurify.sanitize(formData.email.trim()),
+        password: DOMPurify.sanitize(formData.password.trim())
+      };
       const response = await fetch('/api/auth/login', {
         method: 'POST',
         headers: { 
@@ -42,7 +47,7 @@ const LoginForm = () => {
           'CSRF-Token': csrfToken 
         },
         credentials: 'include',
-        body: JSON.stringify(formData),
+        body: JSON.stringify(sanitizedData),
       });
 
       const data = await response.json();

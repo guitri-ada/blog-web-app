@@ -22,7 +22,8 @@ router.get('/', async (req, res) => {
     const userProfiles = await UserProfiles.find();
     res.status(200).json(userProfiles);
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    console.error('Error fetching user profiles:', error);
+    res.status(500).json({ message: 'Failed to fetch user profiles' });
   }
 });
 
@@ -39,7 +40,8 @@ router.get('/:username', async (req, res) => {
     }
     res.status(200).json(profile);
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    console.error('Error fetching user profile:', error);
+    res.status(500).json({ message: 'Failed to fetch user profile' });
   }
 });
 
@@ -72,7 +74,7 @@ router.post(
       res.status(201).json(savedProfile);
     } catch (error) {
       console.error('Error during profile creation:', error.message);
-      res.status(500).json({ message: 'Failed to create profile.', error: error.message });
+      res.status(500).json({ message: 'Failed to create profile.' });
     }
   }
 );
@@ -107,7 +109,7 @@ router.put(
       res.status(200).json(updatedProfile);
     } catch (error) {
       console.error('Error during profile update:', error);
-      res.status(500).json({ message: 'Failed to update profile', error: error.message });
+      res.status(500).json({ message: 'Failed to update profile' });
     }
   }
 );
@@ -121,7 +123,8 @@ router.delete('/:userId', csrfProtection, async (req, res) => {
     }
     res.status(200).json({ message: 'User profile deleted successfully' });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    console.error('Error during profile deletion:', error);
+    res.status(500).json({ message: 'Failed to delete profile' });
   }
 });
 
