@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import DOMPurify from 'dompurify';
 import AuthContext from "../contexts/AuthContext.jsx";
+import { TextField, Button, Container, Typography, Box, Alert } from '@mui/material';
 
 const RegisterForm = () => {
   const [formData, setFormData] = useState({
@@ -26,7 +27,6 @@ const RegisterForm = () => {
     };
     fetchCsrfToken();
 
-    // Redirect if already authenticated
     if (isAuthenticated) {
       navigate('/');
     }
@@ -58,8 +58,8 @@ const RegisterForm = () => {
 
       if (response.ok) {
         setMessage(data.message || 'Registration successful!');
-        setFormData({ username: '', email: '', password: '' }); // Clear the form
-        setTimeout(() => navigate('/login'), 2000); // Redirect to login page
+        setFormData({ username: '', email: '', password: '' });
+        setTimeout(() => navigate('/login'), 2000);
       } else {
         if (data.errors && data.errors.length > 0) {
           const validationErrors = data.errors.map(error => error.msg).join(', ');
@@ -75,46 +75,51 @@ const RegisterForm = () => {
   };
 
   return (
-    <div style={{ maxWidth: "400px", margin: "0 auto", padding: "1em" }}>
-      <h2>Register</h2>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label htmlFor="username">Username:</label>
-          <input
-            type="text"
+    <Container maxWidth="sm">
+      <Box sx={{ mt: 4 }}>
+        <Typography variant="h4" component="h1" gutterBottom>
+          Register
+        </Typography>
+        <form onSubmit={handleSubmit}>
+          <TextField
+            fullWidth
+            margin="normal"
             id="username"
             name="username"
+            label="Username"
             value={formData.username}
             onChange={handleChange}
             required
           />
-        </div>
-        <div>
-          <label htmlFor="email">Email:</label>
-          <input
-            type="email"
+          <TextField
+            fullWidth
+            margin="normal"
             id="email"
             name="email"
+            label="Email"
+            type="email"
             value={formData.email}
             onChange={handleChange}
             required
           />
-        </div>
-        <div>
-          <label htmlFor="password">Password:</label>
-          <input
-            type="password"
+          <TextField
+            fullWidth
+            margin="normal"
             id="password"
             name="password"
+            label="Password"
+            type="password"
             value={formData.password}
             onChange={handleChange}
             required
           />
-        </div>
-        <button type="submit">Register</button>
-      </form>
-      {message && <p>{message}</p>}
-    </div>
+          <Button type="submit" variant="contained" color="primary" fullWidth sx={{ mt: 2 }}>
+            Register
+          </Button>
+        </form>
+        {message && <Alert severity="info" sx={{ mt: 2 }}>{message}</Alert>}
+      </Box>
+    </Container>
   );
 };
 

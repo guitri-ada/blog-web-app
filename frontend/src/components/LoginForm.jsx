@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import DOMPurify from 'dompurify';
 import AuthContext from '../contexts/AuthContext.jsx';
+import { TextField, Button, Container, Typography, Box, Alert } from '@mui/material';
 
 const LoginForm = () => {
   const [formData, setFormData] = useState({ email: '', password: '' });
@@ -22,7 +23,6 @@ const LoginForm = () => {
     };
     fetchCsrfToken();
 
-    // Redirect if already authenticated
     if (isAuthenticated) {
       navigate('/');
     }
@@ -66,35 +66,41 @@ const LoginForm = () => {
   };
 
   return (
-    <div style={{ maxWidth: '400px', margin: '0 auto', padding: '1em' }}>
-      <h2>Login</h2>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label htmlFor="email">Email:</label>
-          <input
-            type="email"
+    <Container maxWidth="sm">
+      <Box sx={{ mt: 4 }}>
+        <Typography variant="h4" component="h1" gutterBottom>
+          Log in
+        </Typography>
+        <form onSubmit={handleSubmit}>
+          <TextField
+            fullWidth
+            margin="normal"
             id="email"
             name="email"
+            label="Email"
+            type="email"
             value={formData.email}
             onChange={handleChange}
             required
           />
-        </div>
-        <div>
-          <label htmlFor="password">Password:</label>
-          <input
-            type="password"
+          <TextField
+            fullWidth
+            margin="normal"
             id="password"
             name="password"
+            label="Password"
+            type="password"
             value={formData.password}
             onChange={handleChange}
             required
           />
-        </div>
-        <button type="submit">Login</button>
-      </form>
-      {message && <p>{message}</p>}
-    </div>
+          <Button type="submit" variant="contained" color="primary" fullWidth sx={{ mt: 2 }}>
+            Log in
+          </Button>
+        </form>
+        {message && <Alert severity="info" sx={{ mt: 2 }}>{message}</Alert>}
+      </Box>
+    </Container>
   );
 };
 
