@@ -27,40 +27,17 @@ const UserProfile = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.put(`/api/userProfiles/${username}`, formData, {
+      const response = await axios.put(`/api/userProfiles/${username}`, formData, {
         headers: {
           'CSRF-Token': csrfToken
         }
       });
       alert('Profile updated successfully');
+      setProfile(response.data);
       handleClose();
-      window.location.reload();
     } catch (err) {
       setError('Failed to update profile');
       console.log(err);
-    }
-  };
-
-  const handleCreateSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      const response = await axios.post(`/api/userProfiles`, formData, {
-        headers: {
-          'CSRF-Token': csrfToken
-        }
-      });
-      if (response.status === 201) {
-        console.log('Profile created and verified successfully:', response.data);
-        handleClose();
-        alert('Profile successfully created');
-        window.location.reload();
-      } else {
-        console.error('Profile creation or verification failed:', response.data);
-        setError('Failed to create profile');
-      }
-    } catch (err) {
-      console.error('Error creating or verifying profile:', err);
-      setError('Failed to create profile');
     }
   };
 
@@ -115,7 +92,6 @@ const UserProfile = () => {
           formData={formData}
           handleChange={handleChange}
           handleSubmit={handleSubmit}
-          handleCreateSubmit={handleCreateSubmit}
         />
       </Box>
     </Container>
