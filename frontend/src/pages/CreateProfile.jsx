@@ -75,7 +75,7 @@ const CreateProfile = () => {
             value={formData.firstname}
             onChange={handleChange}
             required
-            inputProps={{ pattern: "^[a-zA-Z]+$" }}
+            inputProps={{ pattern: "^[a-zA-Z]+$", title: "First name must contain only letters." }}
           />
           <TextField
             fullWidth
@@ -86,7 +86,7 @@ const CreateProfile = () => {
             value={formData.lastname}
             onChange={handleChange}
             required
-            inputProps={{ pattern: "^[a-zA-Z]+$" }}
+            inputProps={{ pattern: "^[a-zA-Z]+$", title: "Last name must contain only letters." }}
           />
           <TextField
             fullWidth

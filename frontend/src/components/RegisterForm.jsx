@@ -90,7 +90,7 @@ const RegisterForm = () => {
             value={formData.username}
             onChange={handleChange}
             required
-            inputProps={{ pattern: "^[a-zA-Z0-9_]+$" }}
+            inputProps={{ pattern: "^[a-zA-Z0-9_]+$", title: "Username must contain only letters, numbers, and underscores." }}
           />
           <TextField
             fullWidth
@@ -113,7 +113,7 @@ const RegisterForm = () => {
             value={formData.password}
             onChange={handleChange}
             required
-            inputProps={{ pattern: "^[a-zA-Z0-9!@#$%^&*()_+=-]+$" }}
+            inputProps={{ pattern: "^[a-zA-Z0-9!@#$%^&*()_+=-]+$", title: "Password must contain only letters, numbers, and special characters (!@#$%^&*()_+=-)." }}
           />
           <Button type="submit" variant="contained" color="primary" fullWidth sx={{ mt: 2 }}>
             Register

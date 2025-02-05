@@ -93,6 +93,7 @@ const LoginForm = () => {
             value={formData.password}
             onChange={handleChange}
             required
+            inputProps={{ pattern: "^[a-zA-Z0-9!@#$%^&*()_+=-]+$", title: "Password must contain only letters, numbers, and special characters (!@#$%^&*()_+=-)." }}
           />
           <Button type="submit" variant="contained" color="primary" fullWidth sx={{ mt: 2 }}>
             Log in

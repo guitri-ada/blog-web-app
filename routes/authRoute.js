@@ -34,7 +34,7 @@ router.post(
       .normalizeEmail(),
     body('password')
       .isLength({ min: 6 }).withMessage('Password must be at least 6 characters long')
-      .matches(/^[a-zA-Z0-9!@#$%^&*()_+=-]+$/).withMessage('Password contains invalid characters')
+      .matches(/^[a-zA-Z0-9!@#$%^&*()_+=-]+$/).withMessage('Password must contain only letters, numbers, and special characters (!@#$%^&*()_+=-).')
       .trim().escape(),
   ],
   handleValidationErrors,
@@ -74,7 +74,7 @@ router.post(
       .normalizeEmail(),
     body('password')
       .notEmpty().withMessage('Password is required')
-      .matches(/^[a-zA-Z0-9!@#$%^&*()_+=-]+$/).withMessage('Password contains invalid characters')
+      .matches(/^[a-zA-Z0-9!@#$%^&*()_+=-]+$/).withMessage('Password must contain only letters, numbers, and special characters (!@#$%^&*()_+=-).')
       .trim().escape(),
   ],
   handleValidationErrors,
