@@ -1,0 +1,28 @@
+name: CI Pipeline
+
+on:
+  push:
+    branches:
+      - main  # Triggers on push to the main branch
+  pull_request:
+    branches:
+      - main  # Triggers on pull requests to the main branch
+
+jobs:
+  build:
+    runs-on: ubuntu-latest  # Defines the OS for the job to run on
+
+    steps:
+      - name: Check out the code
+        uses: actions/checkout@v2  # Checkout the repo to the runner
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14'  # Set the version of Node.js
+
+      - name: Install dependencies
+        run: npm install  # Install dependencies 
+
+      - name: Run tests
+        run: npm test  # Run tests
