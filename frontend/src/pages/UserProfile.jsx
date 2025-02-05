@@ -98,10 +98,7 @@ const UserProfile = () => {
 
   return (
     <Container>
-      <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', minHeight: '100vh', width: '75vh', border: '1px solid black' }}>
-        <Typography variant="h4" component="h1" gutterBottom>
-          Profile Page
-        </Typography>
+      <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', minHeight: '100vh', width: '75vh', padding: 6}}>
         <Avatar alt="Profile Picture" src={tempImage || profile.pictureUrl} sx={{ width: 400, height: 400, marginBottom: 2 }} />
         <ProfileDisplay profile={profile} />
         <ProfileActions handleClick={handleClick} setOpenDialog={setOpenDialog} setOpenCreateDialog={setOpenCreateDialog} handleImageUpload={handleImageUpload} />
