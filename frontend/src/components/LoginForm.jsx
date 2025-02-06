@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
+import DOMPurify from 'dompurify';
 import AuthContext from '../contexts/AuthContext.jsx';
 import { TextField, Button, Container, Typography, Box, Alert } from '@mui/material';
 
@@ -23,7 +24,7 @@ const LoginForm = () => {
     fetchCsrfToken();
 
     if (isAuthenticated) {
-      navigate('/');
+      navigate('/blogposts');
     }
   }, [isAuthenticated, navigate]);
 
@@ -35,6 +36,10 @@ const LoginForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      const sanitizedData = {
+        email: DOMPurify.sanitize(formData.email.trim()),
+        password: DOMPurify.sanitize(formData.password.trim())
+      };
       const response = await fetch('/api/auth/login', {
         method: 'POST',
         headers: { 
@@ -42,7 +47,7 @@ const LoginForm = () => {
           'CSRF-Token': csrfToken 
         },
         credentials: 'include',
-        body: JSON.stringify(formData),
+        body: JSON.stringify(sanitizedData),
       });
 
       const data = await response.json();
@@ -50,9 +55,14 @@ const LoginForm = () => {
       if (response.ok) {
         setMessage(data.message || 'Login successful!');
         login(data.username, data.hasProfile);
-        setTimeout(() => navigate(data.hasProfile ? '/' : '/create-profile'), 2000);
+        setTimeout(() => navigate('/blogposts'), 2000);
       } else {
-        setMessage(data.error || 'Login failed. Please try again.');
+        if (data.errors && data.errors.length > 0) {
+          const validationErrors = data.errors.map(error => error.msg).join(', ');
+          setMessage(validationErrors);
+        } else {
+          setMessage(data.error || 'Login failed. Please try again.');
+        }
       }
     } catch (error) {
       console.error('Error during login:', error);
@@ -88,6 +98,7 @@ const LoginForm = () => {
             value={formData.password}
             onChange={handleChange}
             required
+            inputProps={{ pattern: "^[a-zA-Z0-9!@#$%^&*()_+=-]+$", title: "Password must contain only letters, numbers, and special characters (!@#$%^&*()_+=-)." }}
           />
           <Button type="submit" variant="contained" color="primary" fullWidth sx={{ mt: 2 }}>
             Log in

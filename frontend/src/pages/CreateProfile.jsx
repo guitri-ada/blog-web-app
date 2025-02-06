@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import DOMPurify from 'dompurify';
 import AuthContext from '../contexts/AuthContext.jsx';
 import { TextField, Button, Container, Typography, Box, Alert } from '@mui/material';
 
@@ -35,7 +36,12 @@ const CreateProfile = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.put(`/api/userProfiles/${username}`, formData, {
+      const sanitizedData = {
+        firstname: DOMPurify.sanitize(formData.firstname.trim()),
+        lastname: DOMPurify.sanitize(formData.lastname.trim()),
+        bio: DOMPurify.sanitize(formData.bio.trim())
+      };
+      const response = await axios.put(`/api/userProfiles/${username}`, sanitizedData, {
         headers: {
           'CSRF-Token': csrfToken,
         },
@@ -43,7 +49,7 @@ const CreateProfile = () => {
       if (response.status === 200) {
         setMessage('Profile updated successfully!');
         login(username, true);
-        setTimeout(() => navigate('/'), 2000);
+        setTimeout(() => navigate('/blogposts'), 2000);
       } else {
         setMessage('Failed to update profile. Please try again.');
       }
@@ -69,6 +75,7 @@ const CreateProfile = () => {
             value={formData.firstname}
             onChange={handleChange}
             required
+            inputProps={{ pattern: "^[a-zA-Z]+$", title: "First name must contain only letters." }}
           />
           <TextField
             fullWidth
@@ -79,6 +86,7 @@ const CreateProfile = () => {
             value={formData.lastname}
             onChange={handleChange}
             required
+            inputProps={{ pattern: "^[a-zA-Z]+$", title: "Last name must contain only letters." }}
           />
           <TextField
             fullWidth

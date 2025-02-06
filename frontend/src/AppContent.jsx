@@ -17,6 +17,8 @@ const AppContent = () => {
   useEffect(() => {
     if (isAuthenticated && !hasProfile) {
       navigate('/create-profile');
+    } else if (isAuthenticated && hasProfile) {
+      navigate('/blogposts');
     }
   }, [isAuthenticated, hasProfile, navigate]);
 

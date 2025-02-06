@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
+import DOMPurify from 'dompurify';
 import AuthContext from "../contexts/AuthContext.jsx";
 import { TextField, Button, Container, Typography, Box, Alert } from '@mui/material';
 
@@ -39,13 +40,18 @@ const RegisterForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      const sanitizedData = {
+        username: DOMPurify.sanitize(formData.username.trim()),
+        email: DOMPurify.sanitize(formData.email.trim()),
+        password: DOMPurify.sanitize(formData.password.trim())
+      };
       const response = await fetch('/api/auth/register', {
         method: 'POST',
         headers: { 
           'Content-Type': 'application/json',
           'CSRF-Token': csrfToken
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(sanitizedData),
       });
 
       const data = await response.json();
@@ -84,6 +90,7 @@ const RegisterForm = () => {
             value={formData.username}
             onChange={handleChange}
             required
+            inputProps={{ pattern: "^[a-zA-Z0-9_]+$", title: "Username must contain only letters, numbers, and underscores." }}
           />
           <TextField
             fullWidth
@@ -106,6 +113,7 @@ const RegisterForm = () => {
             value={formData.password}
             onChange={handleChange}
             required
+            inputProps={{ pattern: "^[a-zA-Z0-9!@#$%^&*()_+=-]+$", title: "Password must contain only letters, numbers, and special characters (!@#$%^&*()_+=-)." }}
           />
           <Button type="submit" variant="contained" color="primary" fullWidth sx={{ mt: 2 }}>
             Register

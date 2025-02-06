@@ -25,9 +25,17 @@ router.post(
   '/register',
   csrfProtection,
   [
-    body('username').isLength({ min: 3 }).withMessage('Username must be at least 3 characters long'),
-    body('email').isEmail().withMessage('Invalid email address'),
-    body('password').isLength({ min: 6 }).withMessage('Password must be at least 6 characters long'),
+    body('username')
+      .isLength({ min: 3 }).withMessage('Username must be at least 3 characters long')
+      .matches(/^[a-zA-Z0-9_]+$/).withMessage('Username must contain only letters, numbers, and underscores')
+      .trim().escape(),
+    body('email')
+      .isEmail().withMessage('Invalid email address')
+      .normalizeEmail(),
+    body('password')
+      .isLength({ min: 6 }).withMessage('Password must be at least 6 characters long')
+      .matches(/^[a-zA-Z0-9!@#$%^&*()_+=-]+$/).withMessage('Password must contain only letters, numbers, and special characters (!@#$%^&*()_+=-).')
+      .trim().escape(),
   ],
   handleValidationErrors,
   async (req, res) => {
@@ -61,8 +69,13 @@ router.post(
   '/login',
   csrfProtection,
   [
-    body('email').isEmail().withMessage('Invalid email address'),
-    body('password').notEmpty().withMessage('Password is required'),
+    body('email')
+      .isEmail().withMessage('Invalid email address')
+      .normalizeEmail(),
+    body('password')
+      .notEmpty().withMessage('Password is required')
+      .matches(/^[a-zA-Z0-9!@#$%^&*()_+=-]+$/).withMessage('Password must contain only letters, numbers, and special characters (!@#$%^&*()_+=-).')
+      .trim().escape(),
   ],
   handleValidationErrors,
   async (req, res) => {
@@ -81,7 +94,7 @@ router.post(
 
       // Check if user has a profile
       const userProfile = await UserProfiles.findOne({ user: user._id });
-      const hasProfile = !userProfile.firstname && !userProfile.lastname && !userProfile.bio;
+      const hasProfile = !!userProfile.firstname && !!userProfile.lastname && !!userProfile.bio;
 
       // Generate token
       const token = jwt.sign({ id: user._id, username: user.username, hasProfile }, JWT_SECRET, { expiresIn: '1h' });

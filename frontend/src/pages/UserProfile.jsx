@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Container, Typography, Box, Avatar } from '@mui/material';
 import axios from 'axios';
+import DOMPurify from 'dompurify';
 import useUserProfile from '../hooks/useUserProfile';
 import ProfileDisplay from '../components/ProfileDisplay';
 import ProfileActions from '../components/ProfileActions';
@@ -27,7 +28,12 @@ const UserProfile = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.put(`/api/userProfiles/${username}`, formData, {
+      const sanitizedData = {
+        firstname: DOMPurify.sanitize(formData.firstname.trim()),
+        lastname: DOMPurify.sanitize(formData.lastname.trim()),
+        bio: DOMPurify.sanitize(formData.bio.trim())
+      };
+      const response = await axios.put(`/api/userProfiles/${username}`, sanitizedData, {
         headers: {
           'CSRF-Token': csrfToken
         }
@@ -38,6 +44,34 @@ const UserProfile = () => {
     } catch (err) {
       setError('Failed to update profile');
       console.log(err);
+    }
+  };
+
+  const handleCreateSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const sanitizedData = {
+        firstname: DOMPurify.sanitize(formData.firstname.trim()),
+        lastname: DOMPurify.sanitize(formData.lastname.trim()),
+        bio: DOMPurify.sanitize(formData.bio.trim())
+      };
+      const response = await axios.post(`/api/userProfiles`, sanitizedData, {
+        headers: {
+          'CSRF-Token': csrfToken,
+        },
+      });
+      if (response.status === 201) {
+        console.log('Profile created and verified successfully:', response.data);
+        handleClose();
+        alert('Profile successfully created');
+        window.location.reload();
+      } else {
+        console.error('Profile creation or verification failed:', response.data);
+        setError('Failed to create profile');
+      }
+    } catch (err) {
+      console.error('Error creating or verifying profile:', err);
+      setError('Failed to create profile');
     }
   };
 
