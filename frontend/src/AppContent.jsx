@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react';
+import { useState, useContext, useEffect } from 'react';
 import { Route, Routes, useNavigate } from 'react-router-dom';
 import UserProfile from './pages/UserProfile';
 import RegisterForm from './components/RegisterForm';
@@ -14,14 +14,16 @@ import NewBlogPostForm from './components/NewBlogPostForm.jsx';
 const AppContent = () => {
   const { isAuthenticated, logout, username, hasProfile } = useContext(AuthContext);
   const navigate = useNavigate();
+  const [redirected, setRedirected] = useState(false);
 
   useEffect(() => {
     if (isAuthenticated && !hasProfile) {
       navigate('/create-profile');
-    } else if (isAuthenticated && hasProfile) {
+    } else if (isAuthenticated && hasProfile && !redirected) {
       navigate('/blogposts');
+      setRedirected(true);
     }
-  }, [isAuthenticated, hasProfile, navigate]);
+  }, [isAuthenticated, hasProfile, navigate, redirected]);
 
   return (
     <div style={{ display: 'flex', minHeight: '100vh', width: '100vw' }}>

@@ -1,16 +1,16 @@
-import { useState, useEffect } from 'react';
-import axios from 'axios';
+import { useState, useEffect } from "react";
+import axios from "axios";
 
 const useUserProfile = (username) => {
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
   const [formData, setFormData] = useState({
-    firstname: '',
-    lastname: '',
-    bio: ''
+    firstname: "",
+    lastname: "",
+    bio: "",
   });
-  const [csrfToken, setCsrfToken] = useState('');
+  const [csrfToken, setCsrfToken] = useState("");
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -20,21 +20,21 @@ const useUserProfile = (username) => {
         setFormData({
           firstname: response.data.firstname,
           lastname: response.data.lastname,
-          bio: response.data.bio
+          bio: response.data.bio,
         });
         setLoading(false);
-      } catch (err) {
-        setError('Failed to fetch user profile');
+      } catch {
+        setError("Failed to fetch user profile");
         setLoading(false);
       }
     };
 
     const fetchCsrfToken = async () => {
       try {
-        const response = await axios.get('/api/csrf-token');
+        const response = await axios.get("/api/csrf-token");
         setCsrfToken(response.data.csrfToken);
       } catch (err) {
-        console.error('Error fetching CSRF token:', err);
+        console.error("Error fetching CSRF token:", err);
       }
     };
 
@@ -46,11 +46,22 @@ const useUserProfile = (username) => {
     const { name, value } = e.target;
     setFormData({
       ...formData,
-      [name]: value
+      [name]: value,
     });
   };
 
-  return { profile, loading, error, formData, handleChange, setProfile, setFormData, setLoading, setError, csrfToken };
+  return {
+    profile,
+    loading,
+    error,
+    formData,
+    handleChange,
+    setProfile,
+    setFormData,
+    setLoading,
+    setError,
+    csrfToken,
+  };
 };
 
 export default useUserProfile;

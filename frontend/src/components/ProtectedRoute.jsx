@@ -1,6 +1,7 @@
-import React, { useContext } from 'react';
-import { Navigate } from 'react-router-dom';
-import AuthContext from '../contexts/AuthContext.jsx';
+import { useContext } from "react";
+import PropTypes from "prop-types";
+import { Navigate } from "react-router-dom";
+import AuthContext from "../contexts/AuthContext.jsx";
 
 const ProtectedRoute = ({ children, requireProfile }) => {
   const { isAuthenticated, hasProfile } = useContext(AuthContext);
@@ -18,6 +19,10 @@ const ProtectedRoute = ({ children, requireProfile }) => {
   }
 
   return children;
+};
+ProtectedRoute.propTypes = {
+  children: PropTypes.node.isRequired,
+  requireProfile: PropTypes.bool.isRequired,
 };
 
 export default ProtectedRoute;

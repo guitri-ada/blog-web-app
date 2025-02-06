@@ -1,8 +1,8 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const { body, validationResult } = require('express-validator');
-const BlogPost = require('../models/BlogPost');
-const authenticate = require('../middleware/authenticate');
+const { body, validationResult } = require("express-validator");
+const BlogPost = require("../models/BlogPost");
+const authenticate = require("../middleware/authenticate");
 
 // Helper function to handle validation errors
 const handleValidationErrors = (req, res, next) => {
@@ -14,12 +14,12 @@ const handleValidationErrors = (req, res, next) => {
 };
 
 // Get all blog posts
-router.get('/', authenticate, async (req, res) => {
+router.get("/", authenticate, async (req, res) => {
   try {
     const posts = await BlogPost.find();
     res.json(posts);
   } catch (error) {
-    res.status(500).json({ error: 'Failed to fetch blog posts' });
+    res.status(500).json({ error: "Failed to fetch blog posts" });
   }
 });
 
@@ -27,10 +27,10 @@ router.get('/', authenticate, async (req, res) => {
 router.get('/:id', authenticate, async (req, res) => {
   try {
     const post = await BlogPost.findById(req.params.id);
-    if (!post) return res.status(404).json({ error: 'Post not found' });
+    if (!post) return res.status(404).json({ error: "Post not found" });
     res.json(post);
   } catch (error) {
-    res.status(500).json({ error: 'Failed to fetch blog post' });
+    res.status(500).json({ error: "Failed to fetch blog post" });
   }
 });
 
@@ -38,15 +38,19 @@ router.get('/:id', authenticate, async (req, res) => {
 router.post(
   '/', authenticate,
   [
-    body('title').notEmpty().withMessage('Title is required').trim().escape(),
-    body('content').notEmpty().withMessage('Content is required').trim().escape(),
+    body("title").notEmpty().withMessage("Title is required").trim().escape(),
+    body("content")
+      .notEmpty()
+      .withMessage("Content is required")
+      .trim()
+      .escape(),
   ],
   handleValidationErrors,
   async (req, res) => {
     const { title, content } = req.body;
 
     if (!title || !content) {
-      return res.status(400).json({ error: 'Title and content are required' });
+      return res.status(400).json({ error: "Title and content are required" });
     }
 
     try {
@@ -54,19 +58,19 @@ router.post(
       await newPost.save();
       res.status(201).json(newPost);
     } catch (error) {
-      res.status(500).json({ error: 'Failed to create blog post' });
+      res.status(500).json({ error: "Failed to create blog post" });
     }
-  }
+  },
 );
 
 // Delete a blog post by its ID
 router.delete('/:id', authenticate, async (req, res) => {
   try {
     const post = await BlogPost.findByIdAndDelete(req.params.id);
-    if (!post) return res.status(404).json({ error: 'Post not found' });
+    if (!post) return res.status(404).json({ error: "Post not found" });
     res.json(post);
   } catch (error) {
-    res.status(500).json({ error: 'Failed to delete blog post' });
+    res.status(500).json({ error: "Failed to delete blog post" });
   }
 });
 
@@ -74,30 +78,35 @@ router.delete('/:id', authenticate, async (req, res) => {
 router.put(
   '/:id', authenticate,
   [
-    body('title').notEmpty().withMessage('Title is required').trim().escape(),
-    body('content').notEmpty().withMessage('Content is required').trim().escape(),
+    body("title").notEmpty().withMessage("Title is required").trim().escape(),
+    body("content")
+      .notEmpty()
+      .withMessage("Content is required")
+      .trim()
+      .escape(),
   ],
   handleValidationErrors,
   async (req, res) => {
     const { title, content } = req.body;
 
     if (!title || !content) {
-      return res.status(400).json({ error: 'Title and content are required' });
+      return res.status(400).json({ error: "Title and content are required" });
     }
 
     try {
       const updatedPost = await BlogPost.findByIdAndUpdate(
         req.params.id,
         { title, content },
-        { new: true }
+        { new: true },
       );
 
-      if (!updatedPost) return res.status(404).json({ error: 'Post not found' });
+      if (!updatedPost)
+        return res.status(404).json({ error: "Post not found" });
       res.json(updatedPost);
     } catch (error) {
-      res.status(500).json({ error: 'Failed to update blog post' });
+      res.status(500).json({ error: "Failed to update blog post" });
     }
-  }
+  },
 );
 
 module.exports = router;

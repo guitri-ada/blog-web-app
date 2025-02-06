@@ -1,23 +1,23 @@
-import React, { useState } from 'react';
-import axios from 'axios';
-import { Box, TextField, Button, Typography } from '@mui/material';
+import { useState } from "react";
+import axios from "axios";
+import { Box, TextField, Button, Typography } from "@mui/material";
 
 const BlogPostForm = () => {
-  const [newPost, setNewPost] = useState({ title: '', content: '' });
+  const [newPost, setNewPost] = useState({ title: "", content: "" });
 
   const handleSubmit = () => {
     if (!newPost.title || !newPost.content) {
-      alert('Both title and content are required.');
+      alert("Both title and content are required.");
       return;
     }
 
     axios
-      .post('/api/blogposts', newPost)
+      .post("/api/blogposts", newPost)
       .then(() => {
-        setNewPost({ title: '', content: '' });
-        alert('Blog post created successfully!');
+        setNewPost({ title: "", content: "" });
+        alert("Blog post created successfully!");
       })
-      .catch((error) => console.error('Error creating blog post:', error));
+      .catch((error) => console.error("Error creating blog post:", error));
   };
 
   return (
