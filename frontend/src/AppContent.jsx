@@ -9,6 +9,7 @@ import HomePage from './pages/HomePage.jsx';
 import BlogPosts from './pages/BlogPosts'; 
 import ProtectedRoute from './components/ProtectedRoute.jsx';
 import adaImage from './images/ada.jpg';
+import NewBlogPostForm from './components/NewBlogPostForm.jsx';
 
 const AppContent = () => {
   const { isAuthenticated, logout, username, hasProfile } = useContext(AuthContext);
@@ -32,7 +33,7 @@ const AppContent = () => {
             {isAuthenticated ? (
               <>
                 <button onClick={() => navigate(`/profile/${username}`)} style={{ marginRight: '10px' }}>Profile</button>
-                <button onClick={() => navigate(`/blogposts/`)} style={{ marginRight: '10px' }}>Blog Posts</button>
+                <button onClick={() => navigate(`/blogposts`)} style={{ marginRight: '10px' }}>Blog Posts</button>
                 <button onClick={logout}>Logout</button>
               </>
             ) : (
@@ -48,6 +49,7 @@ const AppContent = () => {
             <Route path="/register" element={<RegisterForm />} />
             <Route path="/login" element={<LoginForm />} />
             <Route path="/create-profile" element={<ProtectedRoute requireProfile={false}><CreateProfile /></ProtectedRoute>} />
+            <Route path="/newblogpost" element={<ProtectedRoute requireProfile={true}><NewBlogPostForm /></ProtectedRoute>} />
             {isAuthenticated && <Route path="/blogposts" element={<BlogPosts />} />}
           </Routes>
         </div>

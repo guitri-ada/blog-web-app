@@ -24,7 +24,7 @@ app.use(csrfProtection);
 
 // Routes
 const blogPostRoutes = require('./routes/blogPostRoute');
-app.use('/api/blogPosts', blogPostRoutes);
+app.use('/api/blogposts', blogPostRoutes);
 
 const authRoute = require('./routes/authRoute');
 app.use('/api/auth', authRoute);

@@ -64,9 +64,13 @@ const BlogPosts = () => {
   return (
     <Box p={4} maxWidth="800px" margin="0 auto">
       <Box mb={4} textAlign="center">
-        <Link to="/newblogpost" style={{ textDecoration: 'none', color: '#007bff', fontSize: '18px' }}>
+        <Button component={Link} to="/newblogpost" variant="contained" color="primary">
           Create a New Blog Post
-        </Link>
+        </Button>
+
+        {/* <Link to="/newblogpost" style={{ textDecoration: 'none', color: '#007bff', fontSize: '18px' }}>
+          Create a New Blog Post
+        </Link> */}
       </Box>
 
       {posts.length > 0 ? (

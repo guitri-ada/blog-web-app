@@ -24,7 +24,7 @@ router.get('/', authenticate, async (req, res) => {
 });
 
 // Get a single blog post by ID
-router.get('/:id', async (req, res) => {
+router.get('/:id', authenticate, async (req, res) => {
   try {
     const post = await BlogPost.findById(req.params.id);
     if (!post) return res.status(404).json({ error: 'Post not found' });
@@ -36,7 +36,7 @@ router.get('/:id', async (req, res) => {
 
 // Create a new blog post
 router.post(
-  '/',
+  '/', authenticate,
   [
     body('title').notEmpty().withMessage('Title is required').trim().escape(),
     body('content').notEmpty().withMessage('Content is required').trim().escape(),
@@ -60,7 +60,7 @@ router.post(
 );
 
 // Delete a blog post by its ID
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', authenticate, async (req, res) => {
   try {
     const post = await BlogPost.findByIdAndDelete(req.params.id);
     if (!post) return res.status(404).json({ error: 'Post not found' });
@@ -72,7 +72,7 @@ router.delete('/:id', async (req, res) => {
 
 // Update a blog post by its ID
 router.put(
-  '/:id',
+  '/:id', authenticate,
   [
     body('title').notEmpty().withMessage('Title is required').trim().escape(),
     body('content').notEmpty().withMessage('Content is required').trim().escape(),

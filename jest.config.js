@@ -2,12 +2,14 @@
 module.exports = async () => {
     return {
       verbose: true,
+      collectCoverage: true,  
+      coverageDirectory: "<rootDir>/coverage",
+      coverageReporters: ["text", "lcov", "json"],
       projects: [
         {
           displayName: "frontend",
           testEnvironment: "jsdom",
-          testMatch: ["<rootDir>/frontend/**/*.{test.js,test.jsx}"],
-          setupFilesAfterEnv: ["<rootDir>/jest.config.js"]
+          testMatch: ["<rootDir>/frontend/**/*.{test.js,test.jsx}"]
         },
         {
           displayName: "backend",
