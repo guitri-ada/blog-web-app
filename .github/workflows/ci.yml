@@ -65,12 +65,11 @@ jobs:
 
       - name: Install dependencies
         run: npm ci
-
-      - name: Build Frontend
-        run: npm run build
-
+        
       - name: Run Vitest tests
-        run: npm run test -- --coverage
+        run: |
+          cd frontend 
+          npm run test -- --coverage 
 
   security-checks:
     name: Security & Dependency Audit
@@ -105,5 +104,10 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Build Frontend
+      - name: Build Backend
         run: npm run build
+
+      - name: Build Frontend
+        run: |
+          cd frontend 
+          npm run build
