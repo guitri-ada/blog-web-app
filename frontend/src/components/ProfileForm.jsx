@@ -1,5 +1,5 @@
-import React from 'react';
-import { Box, TextField, Button } from '@mui/material';
+import { Box, TextField, Button } from "@mui/material";
+import PropTypes from 'prop-types';
 
 const ProfileForm = ({ formData, handleChange, handleSubmit }) => (
   <Box sx={{ p: 2 }}>
@@ -42,5 +42,14 @@ const ProfileForm = ({ formData, handleChange, handleSubmit }) => (
     </form>
   </Box>
 );
+ProfileForm.propTypes = {
+  formData: PropTypes.shape({
+    firstname: PropTypes.string,
+    lastname: PropTypes.string,
+    bio: PropTypes.string,
+  }).isRequired,
+  handleChange: PropTypes.func.isRequired,
+  handleSubmit: PropTypes.func.isRequired,
+};
 
 export default ProfileForm;

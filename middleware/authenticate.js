@@ -1,10 +1,10 @@
-const jwt = require('jsonwebtoken');
+const jwt = require("jsonwebtoken");
 
 const authenticate = (req, res, next) => {
   const token = req.cookies.authToken;
 
   if (!token) {
-    return res.status(401).json({ error: 'Unauthorized' });
+    return res.status(401).json({ error: "Unauthorized" });
   }
 
   try {
@@ -12,7 +12,7 @@ const authenticate = (req, res, next) => {
     req.user = decoded;
     next();
   } catch (err) {
-    res.status(401).json({ error: 'Invalid or expired token' });
+    res.status(401).json({ error: "Invalid or expired token" });
   }
 };
 

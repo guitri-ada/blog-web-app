@@ -1,23 +1,24 @@
-import React, { useState } from 'react';
-import { TextField, Button, Box, Typography } from '@mui/material';
-import DOMPurify from 'dompurify';
+import { useState } from "react";
+import PropTypes from "prop-types";
+import { TextField, Button, Box, Typography } from "@mui/material";
+import DOMPurify from "dompurify";
 
 const BlogPostForm = ({ onCreate }) => {
-  const [newPost, setNewPost] = useState({ title: '', content: '' });
+  const [newPost, setNewPost] = useState({ title: "", content: "" });
 
   const handleSubmit = () => {
     if (!newPost.title || !newPost.content) {
-      alert('Both title and content are required.');
+      alert("Both title and content are required.");
       return;
     }
 
     const sanitizedData = {
       title: DOMPurify.sanitize(newPost.title.trim()),
-      content: DOMPurify.sanitize(newPost.content.trim())
+      content: DOMPurify.sanitize(newPost.content.trim()),
     };
 
     onCreate(sanitizedData);
-    setNewPost({ title: '', content: '' });
+    setNewPost({ title: "", content: "" });
   };
 
   return (
@@ -46,6 +47,9 @@ const BlogPostForm = ({ onCreate }) => {
       </Button>
     </Box>
   );
+};
+BlogPostForm.propTypes = {
+  onCreate: PropTypes.func.isRequired,
 };
 
 export default BlogPostForm;

@@ -1,25 +1,24 @@
-  /** @returns {Promise<import('jest').Config>} */
+/** @returns {Promise<import('jest').Config>} */
 module.exports = async () => {
-    return {
-      verbose: true,
-      projects: [
-        {
-          displayName: "frontend",
-          testEnvironment: "jsdom",
-          testMatch: ["<rootDir>/frontend/**/*.{test.js,test.jsx}"],
-          setupFilesAfterEnv: ["<rootDir>/jest.config.js"]
-        },
-        {
-          displayName: "backend",
-          testEnvironment: "node",
-          testMatch: ["<rootDir>/tests/**/*.test.js"],
-          setupFilesAfterEnv: ["<rootDir>/tests/setup.js"]
-        }
-      ],
-      transform: {
-        "^.+\\.(js|jsx|ts|tsx)$": "babel-jest"
+  return {
+    verbose: true,
+    projects: [
+      {
+        displayName: "frontend",
+        testEnvironment: "jsdom",
+        testMatch: ["<rootDir>/frontend/**/*.{test.js,test.jsx}"],
+        setupFilesAfterEnv: ["<rootDir>/jest.config.js"],
       },
-      testEnvironment: "jsdom"
-    };
+      {
+        displayName: "backend",
+        testEnvironment: "node",
+        testMatch: ["<rootDir>/tests/**/*.test.js"],
+        setupFilesAfterEnv: ["<rootDir>/tests/setup.js"],
+      },
+    ],
+    transform: {
+      "^.+\\.(js|jsx|ts|tsx)$": "babel-jest",
+    },
+    testEnvironment: "jsdom",
   };
-  
+};

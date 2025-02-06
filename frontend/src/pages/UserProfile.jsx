@@ -1,17 +1,26 @@
-import React, { useState } from 'react';
-import { useParams } from 'react-router-dom';
-import { Container, Typography, Box, Avatar } from '@mui/material';
-import axios from 'axios';
-import DOMPurify from 'dompurify';
-import useUserProfile from '../hooks/useUserProfile';
-import ProfileDisplay from '../components/ProfileDisplay';
-import ProfileActions from '../components/ProfileActions';
-import ProfileDialogs from '../components/ProfileDialogs';
-import '../styles/UserProfile.css';
+import { useState } from "react";
+import { useParams } from "react-router-dom";
+import { Container, Box, Avatar } from "@mui/material";
+import axios from "axios";
+import DOMPurify from "dompurify";
+import useUserProfile from "../hooks/useUserProfile";
+import ProfileDisplay from "../components/ProfileDisplay";
+import ProfileActions from "../components/ProfileActions";
+import ProfileDialogs from "../components/ProfileDialogs";
+import "../styles/UserProfile.css";
 
 const UserProfile = () => {
   const { username } = useParams();
-  const { profile, loading, error, formData, handleChange, setProfile, setFormData, setLoading, setError, csrfToken } = useUserProfile(username);
+  const {
+    profile,
+    loading,
+    error,
+    formData,
+    handleChange,
+    setProfile,
+    setError,
+    csrfToken,
+  } = useUserProfile(username);
   const [anchorEl, setAnchorEl] = useState(null);
   const [openDialog, setOpenDialog] = useState(false);
   const [openCreateDialog, setOpenCreateDialog] = useState(false);
@@ -31,18 +40,22 @@ const UserProfile = () => {
       const sanitizedData = {
         firstname: DOMPurify.sanitize(formData.firstname.trim()),
         lastname: DOMPurify.sanitize(formData.lastname.trim()),
-        bio: DOMPurify.sanitize(formData.bio.trim())
+        bio: DOMPurify.sanitize(formData.bio.trim()),
       };
-      const response = await axios.put(`/api/userProfiles/${username}`, sanitizedData, {
-        headers: {
-          'CSRF-Token': csrfToken
-        }
-      });
-      alert('Profile updated successfully');
+      const response = await axios.put(
+        `/api/userProfiles/${username}`,
+        sanitizedData,
+        {
+          headers: {
+            "CSRF-Token": csrfToken,
+          },
+        },
+      );
+      alert("Profile updated successfully");
       setProfile(response.data);
       handleClose();
     } catch (err) {
-      setError('Failed to update profile');
+      setError("Failed to update profile");
       console.log(err);
     }
   };
@@ -53,25 +66,31 @@ const UserProfile = () => {
       const sanitizedData = {
         firstname: DOMPurify.sanitize(formData.firstname.trim()),
         lastname: DOMPurify.sanitize(formData.lastname.trim()),
-        bio: DOMPurify.sanitize(formData.bio.trim())
+        bio: DOMPurify.sanitize(formData.bio.trim()),
       };
       const response = await axios.post(`/api/userProfiles`, sanitizedData, {
         headers: {
-          'CSRF-Token': csrfToken,
+          "CSRF-Token": csrfToken,
         },
       });
       if (response.status === 201) {
-        console.log('Profile created and verified successfully:', response.data);
+        console.log(
+          "Profile created and verified successfully:",
+          response.data,
+        );
         handleClose();
-        alert('Profile successfully created');
+        alert("Profile successfully created");
         window.location.reload();
       } else {
-        console.error('Profile creation or verification failed:', response.data);
-        setError('Failed to create profile');
+        console.error(
+          "Profile creation or verification failed:",
+          response.data,
+        );
+        setError("Failed to create profile");
       }
     } catch (err) {
-      console.error('Error creating or verifying profile:', err);
-      setError('Failed to create profile');
+      console.error("Error creating or verifying profile:", err);
+      setError("Failed to create profile");
     }
   };
 
@@ -79,14 +98,15 @@ const UserProfile = () => {
     try {
       await axios.delete(`/api/userProfiles/${username}`, {
         headers: {
-          'CSRF-Token': csrfToken
-        }
+          "CSRF-Token": csrfToken,
+        },
       });
-      alert('Profile deleted successfully');
+      alert("Profile deleted successfully");
       setOpenDialog(false);
-      window.location.href = '/';
+      window.location.href = "/";
     } catch (err) {
-      setError('Failed to delete profile');
+      setError(`Failed to delete profile: ${err.message}`);
+      console.error(err);
     }
   };
 
@@ -102,17 +122,37 @@ const UserProfile = () => {
   };
 
   const open = Boolean(anchorEl);
-  const id = open ? 'simple-popover' : undefined;
+  const id = open ? "simple-popover" : undefined;
 
   if (loading) return <div>Loading...</div>;
   if (error) return <div>{error}</div>;
 
   return (
     <Container>
-      <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', minHeight: '100vh', width: '75vh', padding: 6}}>
-        <Avatar alt="Profile Picture" src={tempImage || profile.pictureUrl} sx={{ width: 400, height: 400, marginBottom: 2 }} />
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          textAlign: "center",
+          minHeight: "100vh",
+          width: "75vh",
+          padding: 6,
+        }}
+      >
+        <Avatar
+          alt="Profile Picture"
+          src={tempImage || profile.pictureUrl}
+          sx={{ width: 400, height: 400, marginBottom: 2 }}
+        />
         <ProfileDisplay profile={profile} />
-        <ProfileActions handleClick={handleClick} setOpenDialog={setOpenDialog} setOpenCreateDialog={setOpenCreateDialog} handleImageUpload={handleImageUpload} />
+        <ProfileActions
+          handleClick={handleClick}
+          setOpenDialog={setOpenDialog}
+          setOpenCreateDialog={setOpenCreateDialog}
+          handleImageUpload={handleImageUpload}
+          handleCreateSubmit={handleCreateSubmit}
+        />
         <ProfileDialogs
           id={id}
           open={open}
