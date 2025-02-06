@@ -33,6 +33,7 @@
     "jsonwebtoken": "^9.0.2",
     "lint": "^0.8.19",
     "mongoose": "^8.9.1",
+    "prop-types": "^15.8.1",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-router-dom": "^7.0.2",
