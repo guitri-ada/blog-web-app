@@ -17,6 +17,7 @@ module.exports = [
     },
     rules: {
       ...js.configs.recommended.rules,
+      "no-unused-vars": ["error", { varsIgnorePattern: "React" }],
     },
   },
 ];

@@ -7,6 +7,8 @@ import {
   Button,
 } from "@mui/material";
 import PropTypes from 'prop-types';
+// eslint-disable-next-line no-unused-vars
+import React from 'react';
 
 const ConfirmDeleteDialog = ({ open, handleClose, handleDelete }) => (
   <Dialog open={open} onClose={handleClose}>
