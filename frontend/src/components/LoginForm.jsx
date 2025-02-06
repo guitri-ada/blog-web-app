@@ -1,30 +1,37 @@
-import React, { useState, useEffect, useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
-import DOMPurify from 'dompurify';
-import AuthContext from '../contexts/AuthContext.jsx';
-import { TextField, Button, Container, Typography, Box, Alert } from '@mui/material';
+import { useState, useEffect, useContext } from "react";
+import { useNavigate } from "react-router-dom";
+import DOMPurify from "dompurify";
+import AuthContext from "../contexts/AuthContext.jsx";
+import {
+  TextField,
+  Button,
+  Container,
+  Typography,
+  Box,
+  Alert,
+} from "@mui/material";
 
 const LoginForm = () => {
-  const [formData, setFormData] = useState({ email: '', password: '' });
-  const [message, setMessage] = useState('');
-  const [csrfToken, setCsrfToken] = useState('');
+  const [formData, setFormData] = useState({ email: "", password: "" });
+  const [message, setMessage] = useState("");
+  const [csrfToken, setCsrfToken] = useState("");
   const { isAuthenticated, login } = useContext(AuthContext);
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchCsrfToken = async () => {
       try {
-        const response = await fetch('/api/csrf-token');
+        const response = await fetch("/api/csrf-token");
         const data = await response.json();
         setCsrfToken(data.csrfToken);
       } catch (error) {
-        console.error('Error fetching CSRF token:', error);
+        console.error("Error fetching CSRF token:", error);
       }
     };
     fetchCsrfToken();
 
     if (isAuthenticated) {
-      navigate('/blogposts');
+      navigate("/blogposts");
     }
   }, [isAuthenticated, navigate]);
 
@@ -38,35 +45,37 @@ const LoginForm = () => {
     try {
       const sanitizedData = {
         email: DOMPurify.sanitize(formData.email.trim()),
-        password: DOMPurify.sanitize(formData.password.trim())
+        password: DOMPurify.sanitize(formData.password.trim()),
       };
-      const response = await fetch('/api/auth/login', {
-        method: 'POST',
-        headers: { 
-          'Content-Type': 'application/json',
-          'CSRF-Token': csrfToken 
+      const response = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "CSRF-Token": csrfToken,
         },
-        credentials: 'include',
+        credentials: "include",
         body: JSON.stringify(sanitizedData),
       });
 
       const data = await response.json();
 
       if (response.ok) {
-        setMessage(data.message || 'Login successful!');
+        setMessage(data.message || "Login successful!");
         login(data.username, data.hasProfile);
-        setTimeout(() => navigate('/blogposts'), 2000);
+        setTimeout(() => navigate("/blogposts"), 2000);
       } else {
         if (data.errors && data.errors.length > 0) {
-          const validationErrors = data.errors.map(error => error.msg).join(', ');
+          const validationErrors = data.errors
+            .map((error) => error.msg)
+            .join(", ");
           setMessage(validationErrors);
         } else {
-          setMessage(data.error || 'Login failed. Please try again.');
+          setMessage(data.error || "Login failed. Please try again.");
         }
       }
     } catch (error) {
-      console.error('Error during login:', error);
-      setMessage('An error occurred. Please try again.');
+      console.error("Error during login:", error);
+      setMessage("An error occurred. Please try again.");
     }
   };
 
@@ -98,13 +107,27 @@ const LoginForm = () => {
             value={formData.password}
             onChange={handleChange}
             required
-            inputProps={{ pattern: "^[a-zA-Z0-9!@#$%^&*()_+=-]+$", title: "Password must contain only letters, numbers, and special characters (!@#$%^&*()_+=-)." }}
+            inputProps={{
+              pattern: "^[a-zA-Z0-9!@#$%^&*()_+=-]+$",
+              title:
+                "Password must contain only letters, numbers, and special characters (!@#$%^&*()_+=-).",
+            }}
           />
-          <Button type="submit" variant="contained" color="primary" fullWidth sx={{ mt: 2 }}>
+          <Button
+            type="submit"
+            variant="contained"
+            color="primary"
+            fullWidth
+            sx={{ mt: 2 }}
+          >
             Log in
           </Button>
         </form>
-        {message && <Alert severity="info" sx={{ mt: 2 }}>{message}</Alert>}
+        {message && (
+          <Alert severity="info" sx={{ mt: 2 }}>
+            {message}
+          </Alert>
+        )}
       </Box>
     </Container>
   );
