@@ -6,7 +6,7 @@ module.exports = [
     files: ['**/*.{js,ts}'],
     languageOptions: {
       ecmaVersion: 2020,
-      globals: globals.node, // This is for Node.js environment
+      globals: globals.node, 
       parserOptions: {
         ecmaVersion: 'latest',
         sourceType: 'module',
@@ -14,7 +14,7 @@ module.exports = [
     },
     rules: {
       ...js.configs.recommended.rules,
-      'no-console': 'warn', // example backend rule
+      'no-console': 'warn',
     },
   },
 ];
