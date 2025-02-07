@@ -1,6 +1,7 @@
 import { createContext, useState, useEffect } from "react";
 import PropTypes from "prop-types";
 
+// Create AuthContext to share auth state across the app
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
@@ -10,6 +11,7 @@ export const AuthProvider = ({ children }) => {
   const [hasProfile, setHasProfile] = useState(false);
 
   useEffect(() => {
+    // Check authentication status
     const checkAuth = async () => {
       try {
         const response = await fetch("/api/auth/check-auth", {
@@ -35,6 +37,7 @@ export const AuthProvider = ({ children }) => {
       }
     };
 
+    // Fetch CSRF token
     const fetchCsrfToken = async () => {
       try {
         const response = await fetch("/api/csrf-token", {
@@ -52,19 +55,19 @@ export const AuthProvider = ({ children }) => {
     fetchCsrfToken();
   }, []);
 
+  // Update auth state on successful login
   const login = (username, hasProfile) => {
     setIsAuthenticated(true);
     setUsername(username);
     setHasProfile(hasProfile);
   };
 
+  // Logout by calling the API and resetting auth state
   const logout = async () => {
     try {
       const response = await fetch("/api/auth/logout", {
         method: "POST",
-        headers: {
-          "CSRF-Token": csrfToken,
-        },
+        headers: { "CSRF-Token": csrfToken },
         credentials: "include",
       });
 
@@ -95,6 +98,7 @@ export const AuthProvider = ({ children }) => {
     </AuthContext.Provider>
   );
 };
+
 AuthProvider.propTypes = {
   children: PropTypes.node.isRequired,
 };

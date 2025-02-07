@@ -11,6 +11,8 @@ import {
   Alert,
 } from "@mui/material";
 
+// Handles user login by sanitizing inputs, calling the login API,
+// updating auth state, and redirecting on success.
 const LoginForm = () => {
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [message, setMessage] = useState("");
@@ -19,6 +21,7 @@ const LoginForm = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
+    // Fetch CSRF token and redirect if already logged in.
     const fetchCsrfToken = async () => {
       try {
         const response = await fetch("/api/csrf-token");
@@ -43,6 +46,7 @@ const LoginForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      // Sanitize user inputs before sending to the server.
       const sanitizedData = {
         email: DOMPurify.sanitize(formData.email.trim()),
         password: DOMPurify.sanitize(formData.password.trim()),
