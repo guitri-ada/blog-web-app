@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const { body, validationResult } = require("express-validator");
 const BlogPost = require("../models/BlogPost");
-const authenticate = require("../middleware/authenticate");
+const authenticate = require("../middleware/authenticate");  // Import authenticate for JWT-based auth
 
 // Helper function to handle validation errors
 const handleValidationErrors = (req, res, next) => {
@@ -24,7 +24,7 @@ router.get("/", authenticate, async (req, res) => {
 });
 
 // Get a single blog post by ID
-router.get("/:id", async (req, res) => {
+router.get('/:id', authenticate, async (req, res) => {
   try {
     const post = await BlogPost.findById(req.params.id);
     if (!post) return res.status(404).json({ error: "Post not found" });
@@ -36,7 +36,8 @@ router.get("/:id", async (req, res) => {
 
 // Create a new blog post
 router.post(
-  "/",
+  '/',
+  authenticate, // Only authentication is required here
   [
     body("title").notEmpty().withMessage("Title is required").trim().escape(),
     body("content")
@@ -60,11 +61,11 @@ router.post(
     } catch (error) {
       res.status(500).json({ error: "Failed to create blog post" });
     }
-  },
+  }
 );
 
 // Delete a blog post by its ID
-router.delete("/:id", async (req, res) => {
+router.delete('/:id', authenticate, async (req, res) => {
   try {
     const post = await BlogPost.findByIdAndDelete(req.params.id);
     if (!post) return res.status(404).json({ error: "Post not found" });
@@ -76,7 +77,8 @@ router.delete("/:id", async (req, res) => {
 
 // Update a blog post by its ID
 router.put(
-  "/:id",
+  '/:id', 
+  authenticate, // Only authentication is required here
   [
     body("title").notEmpty().withMessage("Title is required").trim().escape(),
     body("content")
@@ -97,16 +99,15 @@ router.put(
       const updatedPost = await BlogPost.findByIdAndUpdate(
         req.params.id,
         { title, content },
-        { new: true },
+        { new: true }
       );
 
-      if (!updatedPost)
-        return res.status(404).json({ error: "Post not found" });
+      if (!updatedPost) return res.status(404).json({ error: "Post not found" });
       res.json(updatedPost);
     } catch (error) {
       res.status(500).json({ error: "Failed to update blog post" });
     }
-  },
+  }
 );
 
 module.exports = router;

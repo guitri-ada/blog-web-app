@@ -1,5 +1,3 @@
-// eslint-disable-next-line no-unused-vars
-import React from 'react';
 import { Card, CardContent, Typography, Box } from "@mui/material";
 import PropTypes from 'prop-types';
 
