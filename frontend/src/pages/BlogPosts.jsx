@@ -9,14 +9,31 @@ const BlogPosts = () => {
   const [editData, setEditData] = useState({ title: "", content: "" });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [csrfToken, setCsrfToken] = useState(null); // Store CSRF token
+
+  // Fetch CSRF token only once on component mount
+  useEffect(() => {
+    const fetchCsrfToken = async () => {
+      try {
+        const response = await axios.get("/api/csrf-token", { withCredentials: true });
+        setCsrfToken(response.data.csrfToken);
+      } catch (err) {
+        console.error("Failed to fetch CSRF token:", err);
+        setError("Failed to fetch CSRF token.");
+      }
+    };
+
+    fetchCsrfToken();
+  }, []); // Empty dependency array to only run once
 
   useEffect(() => {
     fetchPosts();
   }, []);
 
+  // Fetch all blog posts
   const fetchPosts = async () => {
     try {
-      const response = await axios.get("/api/blogposts");
+      const response = await axios.get("/api/blogposts", { withCredentials: true });
       setPosts(response.data);
       setLoading(false);
     } catch {
@@ -25,9 +42,19 @@ const BlogPosts = () => {
     }
   };
 
+  // Delete a blog post
   const deletePost = async (id) => {
+    if (!csrfToken) {
+      alert("CSRF token is not available.");
+      return;
+    }
+
     try {
-      await axios.delete(`/api/blogposts/${id}`);
+      await axios.delete(`/api/blogposts/${id}`, {
+        headers: { "X-CSRF-Token": csrfToken },
+        withCredentials: true,
+      });
+
       setPosts(posts.filter((post) => post._id !== id));
       alert("Blog post deleted successfully!");
     } catch (err) {
@@ -45,18 +72,24 @@ const BlogPosts = () => {
     setEditData({ ...editData, [e.target.name]: e.target.value });
   };
 
+  // Edit a blog post
   const handleEditSubmit = async () => {
-    if (!editingPostId) return;
+    if (!editingPostId || !csrfToken) return; // Check if editingPostId and csrfToken are available
+
     try {
       const response = await axios.put(
         `/api/blogposts/${editingPostId}`,
         editData,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            "X-CSRF-Token": csrfToken,
+          },
+          withCredentials: true,
+        }
       );
-      setPosts(
-        posts.map((post) =>
-          post._id === editingPostId ? response.data : post,
-        ),
-      );
+
+      setPosts(posts.map((post) => (post._id === editingPostId ? response.data : post)));
       setEditingPostId(null);
       alert("Blog post updated successfully!");
     } catch (err) {
@@ -71,9 +104,7 @@ const BlogPosts = () => {
   return (
     <Box p={4} maxWidth="800px" margin="0 auto">
       <Box mb={4} textAlign="center">
-        <Link
-          style={{ textDecoration: "none", color: "#007bff", fontSize: "18px" }}
-        >
+        <Link to="/newblogpost" style={{ textDecoration: "none", color: "#007bff", fontSize: "18px" }}>
           Create a New Blog Post
         </Link>
       </Box>
@@ -108,57 +139,29 @@ const BlogPosts = () => {
                     rows={4}
                     margin="normal"
                   />
-                  <Button
-                    onClick={handleEditSubmit}
-                    variant="contained"
-                    color="primary"
-                  >
+                  <Button onClick={handleEditSubmit} variant="contained" color="primary">
                     Save
                   </Button>
-                  <Button
-                    onClick={() => setEditingPostId(null)}
-                    variant="outlined"
-                    color="secondary"
-                    sx={{ ml: 2 }}
-                  >
+                  <Button onClick={() => setEditingPostId(null)} variant="outlined" color="secondary" sx={{ ml: 2 }}>
                     Cancel
                   </Button>
                 </Box>
               ) : (
                 <Box>
-                  <Typography
-                    variant="h4"
-                    fontWeight="bold"
-                    mb={1}
-                    color="#333"
-                  >
+                  <Typography variant="h4" fontWeight="bold" mb={1} color="#333">
                     {post.title}
                   </Typography>
-                  <Typography
-                    variant="body1"
-                    textAlign="left"
-                    lineHeight={1.8}
-                    color="#555"
-                  >
+                  <Typography variant="body1" textAlign="left" lineHeight={1.8} color="#555">
                     {post.content}
                   </Typography>
                   <Typography variant="body2" textAlign="right" color="black">
                     By {post.author}, on {date}
                   </Typography>
                   <Box mt={2}>
-                    <Button
-                      onClick={() => startEditing(post)}
-                      variant="outlined"
-                      color="primary"
-                      sx={{ mr: 2 }}
-                    >
+                    <Button onClick={() => startEditing(post)} variant="outlined" color="primary" sx={{ mr: 2 }}>
                       Edit
                     </Button>
-                    <Button
-                      onClick={() => deletePost(post._id)}
-                      variant="contained"
-                      color="error"
-                    >
+                    <Button onClick={() => deletePost(post._id)} variant="contained" color="error">
                       Delete
                     </Button>
                   </Box>
