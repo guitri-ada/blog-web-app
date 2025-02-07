@@ -27,7 +27,7 @@ const NewBlogPostForm = ({ onPostAdded = () => {} }) => {
     // Sanitize user input
     const sanitizedData = {
       title: DOMPurify.sanitize(newPost.title.trim()),
-      content: DOMPurify.sanitize(newPost.content.trim()),
+      content: DOMPurify.sanitize(newPost.content.trim())
     };
 
     try {

@@ -2,7 +2,7 @@ import { useState } from "react";
 import PropTypes from "prop-types";
 import { TextField, Button, Box, Typography } from "@mui/material";
 import DOMPurify from "dompurify";
-import axios from "axios"; // Import axios to handle the CSRF token fetch
+import axios from "axios";
 
 const BlogPostForm = ({ onCreate }) => {
   const [newPost, setNewPost] = useState({ title: "", content: "" });
