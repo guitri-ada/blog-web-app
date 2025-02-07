@@ -149,25 +149,31 @@
 
 
 ### 3. Security Enhancements Evidence
-- Security is ensured through password hashing, CSRF protection, and input sanitization.
-- **Implementation References:**  
-  - Password hashing: [models/User.js](../models/User.js)  
-  - CSRF protection: Implemented in [server.js](../server.js) and used in routes (e.g., [routes/authRoute.js](../routes/authRoute.js), [routes/userProfilesRoute.js](../routes/userProfilesRoute.js), [routes/blogPostRoute.js](../routes/blogPostRoute.js))  
-  - Input validation/sanitization: [routes/authRoute.js](../routes/authRoute.js), [frontend/src/pages/CreateProfile.jsx](../frontend/src/pages/CreateProfile.jsx), [frontend/src/pages/UserProfile.jsx](../frontend/src/pages/UserProfile.jsx), [frontend/src/pages/BlogPostForm.jsx](../frontend/src/pages/BlogPostForm.jsx), [frontend/src/components/NewBlogPostForm.jsx](../frontend/src/components/NewBlogPostForm.jsx)
+- Security is ensured through various measures including password hashing, CSRF protection, and input sanitization.
+- **Description:**
+  - **Password Hashing:** Passwords are securely stored using bcrypt, which hashes passwords before storing them in the database. This ensures that even if the database is compromised, the passwords remain secure. The implementation can be found in [models/User.js](models/User.js).
+  - **CSRF Protection:** Cross-Site Request Forgery (CSRF) protection is implemented using the csurf middleware in Express. This middleware generates CSRF tokens that are included in requests to protect against CSRF attacks. The CSRF protection is configured in [server.js](server.js) and used in various routes such as [routes/authRoute.js](routes/authRoute.js), [routes/userProfilesRoute.js](routes/userProfilesRoute.js), and [routes/blogPostRoute.js](routes/blogPostRoute.js).
+  - **Input Sanitization:** User inputs are validated and sanitized to prevent SQL injection and XSS attacks. This is consistently implemented across the application using express-validator in backend routes and DOMPurify in frontend components. Examples include [routes/authRoute.js](routes/authRoute.js), [frontend/src/pages/CreateProfile.jsx](frontend/src/pages/CreateProfile.jsx), and [frontend/src/components/NewBlogPostForm.jsx](frontend/src/components/NewBlogPostForm.jsx).
+  - **JWT-Based Sessions:** User sessions are managed using JSON Web Tokens (JWT), ensuring secure and stateless authentication. The tokens are generated and verified in [routes/authRoute.js](routes/authRoute.js).
+  - **Role-Based Access Control:** Certain actions, such as editing or deleting blog posts, are restricted to authorized users. This is enforced in the backend routes and reflected in the frontend UI.
 
+- **Implementation References:**  
+  - Password hashing: [models/User.js](models/User.js)  
+  - CSRF protection: Implemented in [server.js](server.js) and used in routes (e.g., [routes/authRoute.js](routes/authRoute.js), [routes/userProfilesRoute.js](routes/userProfilesRoute.js), [routes/blogPostRoute.js](routes/blogPostRoute.js))  
+  - Input validation/sanitization: [routes/authRoute.js](routes/authRoute.js), [frontend/src/pages/CreateProfile.jsx](frontend/src/pages/CreateProfile.jsx), [frontend/src/pages/UserProfile.jsx](frontend/src/pages/UserProfile.jsx), [frontend/src/pages/BlogPostForm.jsx](frontend/src/pages/BlogPostForm.jsx), [frontend/src/components/NewBlogPostForm.jsx](frontend/src/components/NewBlogPostForm.jsx)
 
 ### 4. Code Quality and Refactoring Evidence
 The codebase is modularized following best practices and adheres to ESLint standards. Refactoring improved readability and maintainability.
 - **Description:**
   - **Modularization:** The codebase is organized into modular components, hooks, pages, and contexts to ensure a clean and maintainable structure. This modular approach allows for easier testing, debugging, and future enhancements. Examples include:
-    - **Components:** Reusable UI components are located in the [frontend/src/components/](../frontend/src/components/) directory. Examples include [BlogPostCard.jsx](../frontend/src/components/BlogPostCard.jsx) and [NewBlogPostForm.jsx](../frontend/src/components/NewBlogPostForm.jsx).
-    - **Hooks:** Custom hooks for managing state and side effects are located in the [frontend/src/hooks/](../frontend/src/hooks/) directory. Examples include [useBlogPosts.jsx](../frontend/src/hooks/useBlogPosts.jsx) and [useAuth.jsx](../frontend/src/hooks/useAuth.jsx).
-    - **Pages:** Page components that represent different views of the application are located in the [frontend/src/pages/](../frontend/src/pages/) directory. Examples include [BlogPosts.jsx](../frontend/src/pages/BlogPosts.jsx) and [UserProfile.jsx](../frontend/src/pages/UserProfile.jsx).
-    - **Contexts:** Context providers for managing global state are located in the [frontend/src/contexts/](../frontend/src/contexts/) directory. Examples include [AuthContext.jsx](../frontend/src/contexts/AuthContext.jsx) and [ThemeContext.jsx](../frontend/src/contexts/ThemeContext.jsx).
+    - **Components:** Reusable UI components are located in the [frontend/src/components/](frontend/src/components/) directory. Examples include [BlogPostCard.jsx](frontend/src/components/BlogPostCard.jsx) and [NewBlogPostForm.jsx](frontend/src/components/NewBlogPostForm.jsx).
+    - **Hooks:** Custom hooks for managing state and side effects are located in the [frontend/src/hooks/](frontend/src/hooks/) directory. Examples include [useBlogPosts.jsx](frontend/src/hooks/useBlogPosts.jsx) and [useAuth.jsx](frontend/src/hooks/useAuth.jsx).
+    - **Pages:** Page components that represent different views of the application are located in the [frontend/src/pages/](frontend/src/pages/) directory. Examples include [BlogPosts.jsx](frontend/src/pages/BlogPosts.jsx) and [UserProfile.jsx](frontend/src/pages/UserProfile.jsx).
+    - **Contexts:** Context providers for managing global state are located in the [frontend/src/contexts/](frontend/src/contexts/) directory. Examples include [AuthContext.jsx](frontend/src/contexts/AuthContext.jsx) and [ThemeContext.jsx](frontend/src/contexts/ThemeContext.jsx).
 
   - **Linting and Code Quality:** The project uses ESLint to enforce coding standards and maintain code quality. The linting configuration files are located in both the frontend and backend directories:
-    - **Frontend:** The ESLint configuration for the frontend is defined in [frontend/eslint.config.js](../frontend/eslint.config.js).
-    - **Backend:** The ESLint configuration for the backend is defined in [backend/.eslintrc.js](../backend/.eslintrc.js).
+    - **Frontend:** The ESLint configuration for the frontend is defined in [frontend/eslint.config.js](frontend/eslint.config.js).
+    - **Backend:** The ESLint configuration for the backend is defined in [eslint.config.cjs](eslint.config.cjs).
     - **Commit Logs:** Adherence to linting standards and code quality is observed in the commit logs, where code reviews and automated linting checks ensure that the codebase remains clean and maintainable.
 
   - **Refactoring:** Continuous refactoring efforts have been made to improve code readability, maintainability, and performance. This includes:
@@ -176,14 +182,14 @@ The codebase is modularized following best practices and adheres to ESLint stand
     - **Documentation:** Comprehensive documentation of code, including inline comments and README updates, to provide clear guidance on the functionality and usage of different components and modules.
 
 - **Implementation References:**  
-  - Modular components: [frontend/src/components/](../frontend/src/components/), [frontend/src/hooks/](../frontend/src/hooks/), [frontend/src/pages/](../frontend/src/pages/), [frontend/src/contexts/](../frontend/src/contexts/)
-  - Linting configuration: [frontend/eslint.config.js](../frontend/eslint.config.js), [backend/.eslintrc.js](../backend/.eslintrc.js) and adherence observed in commit logs.
+  - Modular components: [frontend/src/components/](frontend/src/components/), [frontend/src/hooks/](frontend/src/hooks/), [frontend/src/pages/](frontend/src/pages/), [frontend/src/contexts/](frontend/src/contexts/)
+  - Linting configuration: [frontend/eslint.config.js](frontend/eslint.config.js), [eslint.config.cjs](eslint.config.cjs) and adherence observed in commit logs.
 
 ### 5. CI/CD and Git Practices Evidence
 - **Description:** CI/CD workflows are configured via GitHub Actions to automate tests and code quality checks. Git practices demonstrate collaboration via branching and pull requests.
   - **CI/CD Configuration:** The CI/CD pipeline is set up using GitHub Actions to ensure continuous integration and continuous deployment. This includes:
-    - **Automated Testing:** Every commit triggers a suite of tests to ensure that new changes do not break existing functionality. The configuration for this can be found in [/.github/workflows/ci.yml](../.github/workflows/ci.yml).
-    - **Linting and Code Quality Checks:** Automated linting checks are performed to enforce coding standards and maintain code quality. This is also configured in [/.github/workflows/ci.yml](../.github/workflows/ci.yml).
+    - **Automated Testing:** Every commit triggers a suite of tests to ensure that new changes do not break existing functionality. The configuration for this can be found in [/.github/workflows/ci.yml](.github/workflows/ci.yml).
+    - **Linting and Code Quality Checks:** Automated linting checks are performed to enforce coding standards and maintain code quality. This is also configured in [/.github/workflows/ci.yml](.github/workflows/ci.yml).
 
   - **Git Practices:** The project follows best practices for version control and collaboration using Git. This includes:
     - **Branching Strategy:** A clear branching strategy is followed to manage feature development, bug fixes, and releases. The main branches include `main` for production-ready code, and feature branches for individual features or bug fixes.
@@ -195,5 +201,5 @@ The codebase is modularized following best practices and adheres to ESLint stand
     - **Peer Reviews:** Team members review each pull request, providing feedback and suggestions for improvement. This collaborative approach helps in maintaining high code quality and catching potential issues early.
 
 - **Implementation References:**  
-  - CI/CD configuration: [/.github/workflows/ci.yml](../.github/workflows/ci.yml)
-  - Git commit history and branching strategy: Refer to repository commit logs and pull request discussions. Evidence of branching strategy can be seen in the [branches](../branches) and [pull requests](../pulls) sections of the repository.
+  - CI/CD configuration: [/.github/workflows/ci.yml](.github/workflows/ci.yml)
+  - Git commit history and branching strategy: Refer to repository commit logs and pull request descriptions. Evidence of branching strategy can be seen in the branches and closed pull request sections of the repository.
