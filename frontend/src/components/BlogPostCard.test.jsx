@@ -1,13 +1,22 @@
-import React from 'react';
 import { render } from '@testing-library/react';
 import BlogPostCard from './BlogPostCard';
 
-test('renders BlogPostCard without crashing', () => {
-    const post = {
-        title: 'Sample Title',
-        content: 'Sample content for the blog post.',
-        createdAt: '2025-02-06T10:49:00Z'
-    };
+// Mock the global alert function
+beforeEach(() => {
+  jest.spyOn(window, 'alert').mockImplementation(() => {});
+});
 
-    render(<BlogPostCard post={post} />);
+afterEach(() => {
+  // Restore the original alert function after each test
+  window.alert.mockRestore();
+});
+
+test('renders BlogPostCard without crashing', () => {
+  const post = {
+    title: 'Sample Title',
+    content: 'Sample content for the blog post.',
+    createdAt: '2025-02-06T10:49:00Z'
+  };
+
+  render(<BlogPostCard post={post} />);
 });

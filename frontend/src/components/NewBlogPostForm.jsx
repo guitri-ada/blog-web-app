@@ -4,13 +4,13 @@ import axios from "axios";
 import { Box, TextField, Button, Typography } from "@mui/material";
 import DOMPurify from "dompurify";
 
-const NewBlogPostForm = ({ onPostAdded }) => {
+const NewBlogPostForm = ({ onPostAdded = () => {} }) => { 
   const [newPost, setNewPost] = useState({ title: "", content: "" });
 
-  // Function to fetch CSRF token from the server
   const getCsrfToken = async () => {
     try {
       const response = await axios.get("/api/csrf-token", { withCredentials: true });
+      console.log("CSRF Response:", response); 
       return response.data.csrfToken;
     } catch (err) {
       console.error("Failed to fetch CSRF token:", err);
@@ -90,11 +90,6 @@ const NewBlogPostForm = ({ onPostAdded }) => {
 
 NewBlogPostForm.propTypes = {
   onPostAdded: PropTypes.func,
-};
-
-// Default to an empty function if onPostAdded is not provided
-NewBlogPostForm.defaultProps = {
-  onPostAdded: () => {},
 };
 
 export default NewBlogPostForm;

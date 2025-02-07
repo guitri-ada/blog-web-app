@@ -9,21 +9,26 @@ const BlogPosts = () => {
   const [editData, setEditData] = useState({ title: "", content: "" });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [csrfToken, setCsrfToken] = useState(null); // Store CSRF token
+
+  // Fetch CSRF token only once on component mount
+  useEffect(() => {
+    const fetchCsrfToken = async () => {
+      try {
+        const response = await axios.get("/api/csrf-token", { withCredentials: true });
+        setCsrfToken(response.data.csrfToken);
+      } catch (err) {
+        console.error("Failed to fetch CSRF token:", err);
+        setError("Failed to fetch CSRF token.");
+      }
+    };
+
+    fetchCsrfToken();
+  }, []); // Empty dependency array to only run once
 
   useEffect(() => {
     fetchPosts();
   }, []);
-
-  // Fetch CSRF token
-  const getCsrfToken = async () => {
-    try {
-      const response = await axios.get("/api/csrf-token", { withCredentials: true });
-      return response.data.csrfToken;
-    } catch (err) {
-      console.error("Failed to fetch CSRF token:", err);
-      return null;
-    }
-  };
 
   // Fetch all blog posts
   const fetchPosts = async () => {
@@ -39,10 +44,12 @@ const BlogPosts = () => {
 
   // Delete a blog post
   const deletePost = async (id) => {
-    try {
-      const csrfToken = await getCsrfToken();
-      if (!csrfToken) throw new Error("CSRF token not available");
+    if (!csrfToken) {
+      alert("CSRF token is not available.");
+      return;
+    }
 
+    try {
       await axios.delete(`/api/blogposts/${id}`, {
         headers: { "X-CSRF-Token": csrfToken },
         withCredentials: true,
@@ -67,11 +74,9 @@ const BlogPosts = () => {
 
   // Edit a blog post
   const handleEditSubmit = async () => {
-    if (!editingPostId) return;
-    try {
-      const csrfToken = await getCsrfToken();
-      if (!csrfToken) throw new Error("CSRF token not available");
+    if (!editingPostId || !csrfToken) return; // Check if editingPostId and csrfToken are available
 
+    try {
       const response = await axios.put(
         `/api/blogposts/${editingPostId}`,
         editData,
