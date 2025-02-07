@@ -90,9 +90,18 @@
 
 - **Implementation References:**  
   - **User Authentication Flows:** 
-    - **Login and Registration:** Implemented in [routes/authRoute.js](routes/authRoute.js) for handling user registration and login. The backend uses bcrypt for password hashing and JWT for session management, ensuring secure credential storage. The frontend components for login and registration are [LoginForm.jsx](../frontend/src/components/LoginForm.jsx) and [RegisterForm.jsx](../frontend/src/components/RegisterForm.jsx), which handle user input and form submission.
+    - **Login and Registration:** Implemented in [routes/authRoute.js](routes/authRoute.js) for handling user registration and login. The backend uses bcrypt for password hashing and JWT for session management, ensuring secure credential storage. The frontend components for login and registration are [LoginForm.jsx](../frontend/src/components/LoginForm.jsx) and [RegisterForm.jsx](../frontend/src/components/RegisterForm.jsx), which handle user input and form submission. User inputs are sanitized thoroughly, and invalid input (e.g invalid credentials) is gracefully handled with user-friendly feedback.
     - **Context Management:** The authentication state is managed using React Context in [AuthContext.jsx](../frontend/src/contexts/AuthContext.jsx), providing a global state for user authentication status and profile information.
     - **Protected Routes:** Routes that require authentication are protected using a custom component [ProtectedRoute.jsx](../frontend/src/components/ProtectedRoute.jsx), which checks the user's authentication status before rendering the protected component.
+
+  - **Security Enhancements:**
+    - **Password Hashing:** Passwords are securely stored using bcrypt, implemented in [models/User.js](../models/User.js).
+    - **CSRF Protection:** Implemented using the csurf middleware in Express, with evidence available in [server.js](../server.js). CSRF tokens are included in requests to protect against cross-site request forgery attacks.
+    - **Input Sanitization:** User inputs are validated and sanitized to prevent SQL injection and XSS attacks. This is consistently implemented across the application, as seen in [authRoute.js](../routes/authRoute.js) and [CreateProfile.jsx](../frontend/src/pages/CreateProfile.jsx).
+
+  - **Authorization:**
+    - **JWT-Based Sessions:** User sessions are managed using JWT, ensuring secure and stateless authentication. The tokens are generated and verified in [authRoute.js](../routes/authRoute.js).
+    - **Role-Based Access Control:** Certain actions, such as editing or deleting blog posts, are restricted to authorized users. This is enforced in the backend routes and reflected in the frontend UI.
 
   - **Blog Posts Management:**
     - **CRUD Operations:** Implemented in [routes/blogPostRoute.js](../routes/blogPostRoute.js) for creating, reading, updating, and deleting blog posts. The frontend components [BlogPostCard.jsx](../frontend/src/components/BlogPostCard.jsx) and [BlogPostList.jsx](../frontend/src/components/BlogPostList.jsx) handle the display and interaction with blog posts.
@@ -103,14 +112,6 @@
     - **Profile Operations:** Users can create, edit, delete, and view their profile details. These operations are handled in [routes/userProfilesRoute.js](../routes/userProfilesRoute.js) and integrated with frontend pages such as [UserProfile.jsx](../frontend/src/pages/UserProfile.jsx) and [CreateProfile.jsx](../frontend/src/pages/CreateProfile.jsx).
     - **Form Handling and Validation:** The frontend components use form handling and validation techniques to ensure data integrity. For example, [CreateProfile.jsx](../frontend/src/pages/CreateProfile.jsx) uses DOMPurify to sanitize user inputs before sending them to the backend.
 
-  - **Security Enhancements:**
-    - **Password Hashing:** Passwords are securely stored using bcrypt, implemented in [models/User.js](../models/User.js).
-    - **CSRF Protection:** Implemented using the csurf middleware in Express, with evidence available in [server.js](../server.js). CSRF tokens are included in requests to protect against cross-site request forgery attacks.
-    - **Input Sanitization:** User inputs are validated and sanitized to prevent SQL injection and XSS attacks. This is consistently implemented across the application, as seen in [authRoute.js](../routes/authRoute.js) and [CreateProfile.jsx](../frontend/src/pages/CreateProfile.jsx).
-
-  - **Authorization:**
-    - **JWT-Based Sessions:** User sessions are managed using JWT, ensuring secure and stateless authentication. The tokens are generated and verified in [authRoute.js](../routes/authRoute.js).
-    - **Role-Based Access Control:** Certain actions, such as editing or deleting blog posts, are restricted to authorized users. This is enforced in the backend routes and reflected in the frontend UI.
 
 - **Screenshots:**
   - Below are screenshots of the application features:
@@ -142,9 +143,13 @@
   - Tests were designed to cover various edge cases and error conditions, such as invalid input, missing fields, and network errors. Examples include:
     - [`frontend/src/components/NewBlogPostForm.test.jsx`](../frontend/src/components/NewBlogPostForm.test.jsx) which tests form validation and error handling.
     - [`tests/authRoute.test.js`](../tests/authRoute.test.js) which includes tests for invalid login attempts and user registration errors.
+   
+- **Testing insights:**
+  - From having comprehensive (above 80%) test coverage and taking a TDD approach, we found a number of bugs in our code which were causing our tests to fail and were able to rectify them accordingly. This was crucial in maintaining the expected and flawless functionality of our application.
 
 - **Screenshot of Test Coverage:**
   - Below is a screenshot of our overall test coverage.
+  - **Overall test line coverage: 82.9%** - which is within the distinction grade band criteria
   ![Coverage Report](frontend/src/images/testCoverage.jpg)
 
 
@@ -156,6 +161,19 @@
   - **Input Sanitization:** User inputs are validated and sanitized to prevent SQL injection and XSS attacks. This is consistently implemented across the application using express-validator in backend routes and DOMPurify in frontend components. Examples include [routes/authRoute.js](routes/authRoute.js), [frontend/src/pages/CreateProfile.jsx](frontend/src/pages/CreateProfile.jsx), and [frontend/src/components/NewBlogPostForm.jsx](frontend/src/components/NewBlogPostForm.jsx).
   - **JWT-Based Sessions:** User sessions are managed using JSON Web Tokens (JWT), ensuring secure and stateless authentication. The tokens are generated and verified in [routes/authRoute.js](routes/authRoute.js).
   - **Role-Based Access Control:** Certain actions, such as editing or deleting blog posts, are restricted to authorized users. This is enforced in the backend routes and reflected in the frontend UI.
+
+- **Security Risk Mitigation**
+
+| Security Risk                         | Mitigation Strategy                                            |
+|---------------------------------------|----------------------------------------------------------      |
+| **Database breach**                   | Password hashing using **bcrypt** to secure credentials.       |
+| **Cross-Site Request Forgery (CSRF)** | Implemented **CSRF protection** via middleware using csurf.    |
+| **SQL Injection**                     | Input validation and **sanitization** using express-validator. |
+| **XSS (Cross-Site Scripting)**        | Used **DOMPurify** to sanitize user inputs before rendering. |
+| **Unauthorized Access**               | **Role-based access control (RBAC)** implemented in routes. |
+| **Sensitive Data Exposure**           | Used **environment variables (.env)** to store secrets securely. |
+
+
 
 - **Implementation References:**  
   - Password hashing: [models/User.js](models/User.js)  
@@ -180,6 +198,7 @@ The codebase is modularized following best practices and adheres to ESLint stand
     - **Code Reviews:** A rigorous code review process is documented in commit histories and pull requests. Each pull request undergoes thorough review to ensure adherence to best practices and coding standards.
     - **Best Practices:** Adoption of best practices such as DRY (Don't Repeat Yourself) and modular design patterns. This ensures that the codebase is easy to understand, extend, and maintain.
     - **Documentation:** Comprehensive documentation of code, including inline comments and README updates, to provide clear guidance on the functionality and usage of different components and modules.
+    - **Before/After:** Before refactoring many files were "loose" in our root folder and not modularized. Our backend tests were also loosely unmodularized in a "tests" folder, which have now been modularized into their respective packages.
 
 - **Implementation References:**  
   - Modular components: [frontend/src/components/](frontend/src/components/), [frontend/src/hooks/](frontend/src/hooks/), [frontend/src/pages/](frontend/src/pages/), [frontend/src/contexts/](frontend/src/contexts/)
@@ -190,7 +209,7 @@ The codebase is modularized following best practices and adheres to ESLint stand
   - **CI/CD Configuration:** The CI/CD pipeline is set up using GitHub Actions to ensure continuous integration and continuous deployment. This includes:
     - **Automated Testing:** Every commit triggers a suite of tests to ensure that new changes do not break existing functionality. The configuration for this can be found in [/.github/workflows/ci.yml](.github/workflows/ci.yml).
     - **Linting and Code Quality Checks:** Automated linting checks are performed to enforce coding standards and maintain code quality. This is also configured in [/.github/workflows/ci.yml](.github/workflows/ci.yml).
-
+   
   - **Git Practices:** The project follows best practices for version control and collaboration using Git. This includes:
     - **Branching Strategy:** A clear branching strategy is followed to manage feature development, bug fixes, and releases. The main branches include `main` for production-ready code, and feature branches for individual features or bug fixes.
     - **Pull Requests:** All changes are made through pull requests, which are reviewed by team members before being merged. This ensures that code quality is maintained and that multiple perspectives are considered. 
@@ -199,6 +218,26 @@ The codebase is modularized following best practices and adheres to ESLint stand
   - **Code Reviews:** A rigorous code review process is in place to ensure that all changes are thoroughly reviewed before being merged. This process includes:
     - **Automated Checks:** Automated checks for tests, linting, and code quality are run on every pull request.
     - **Peer Reviews:** Team members review each pull request, providing feedback and suggestions for improvement. This collaborative approach helps in maintaining high code quality and catching potential issues early.
+   
+- **Impact of CI/CD pipeline:**
+  - Through having indutry-standard CI pipeline steps automatically run after each push/pull-request, we were able to identify countless design-flaws, bad practices and bugs that were causing our pieline steps to fail. This allowed us to refactor our code to ensure best-practices and industry standards are met, ensuring no bugs are able to be pushed to our repo.
+  - Every pull request triggers automated tests and linting checks, ensuring only high-quality code is merged. This reduces production bugs and enforces code consistency.
+
+- **CI Flow Diagram upon push:**
+
+ ![image](https://github.com/user-attachments/assets/ddabf30c-975c-4ac6-8f7a-888b2c6e6a5c)
+
+ 
+- **Git Workflow Table:**
+
+| Best Practice          | Implementation Details |
+|------------------------|-------------------------------------------------------------|
+| **Feature Branching**  | New features are developed in separate branches (e.g., `feature/auth`). |
+| **Commit Messages**    | Descriptive commit messages following conventional commits (e.g., `fix: resolve login issue`). |
+| **Pull Request Reviews** | Code is reviewed via pull requests before merging into `main`. |
+| **GitHub Actions**     | Automates **testing, linting, and deployment** for every PR. |
+| **Branch Protection**  | Main branch is protected—requires **approval** before merging. |
+
 
 - **Implementation References:**  
   - CI/CD configuration: [/.github/workflows/ci.yml](.github/workflows/ci.yml)
