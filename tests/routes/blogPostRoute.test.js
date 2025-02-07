@@ -3,7 +3,6 @@ const express = require("express");
 const mongoose = require("mongoose");
 const BlogPost = require("../../models/BlogPost");
 const blogRoutes = require("../../routes/blogPostRoute");
-const authenticate = require("../../middleware/authenticate");
 
 jest.mock("../../middleware/authenticate", () => (req, res, next) => {
   req.user = { id: "testUserId" };
