@@ -1,12 +1,20 @@
-import React from 'react';
-import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Button } from '@mui/material';
+import {
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  Button,
+} from "@mui/material";
+import PropTypes from 'prop-types';
 
 const ConfirmDeleteDialog = ({ open, handleClose, handleDelete }) => (
   <Dialog open={open} onClose={handleClose}>
     <DialogTitle>Confirm Delete</DialogTitle>
     <DialogContent>
       <DialogContentText>
-        Are you sure you want to delete this profile? This action cannot be undone.
+        Are you sure you want to delete this profile? This action cannot be
+        undone.
       </DialogContentText>
     </DialogContent>
     <DialogActions>
@@ -19,5 +27,10 @@ const ConfirmDeleteDialog = ({ open, handleClose, handleDelete }) => (
     </DialogActions>
   </Dialog>
 );
+ConfirmDeleteDialog.propTypes = {
+  open: PropTypes.bool.isRequired,
+  handleClose: PropTypes.func.isRequired,
+  handleDelete: PropTypes.func.isRequired,
+};
 
 export default ConfirmDeleteDialog;

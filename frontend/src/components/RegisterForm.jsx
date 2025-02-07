@@ -1,8 +1,15 @@
-import React, { useState, useEffect, useContext } from "react";
+import { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import DOMPurify from 'dompurify';
+import DOMPurify from "dompurify";
 import AuthContext from "../contexts/AuthContext.jsx";
-import { TextField, Button, Container, Typography, Box, Alert } from '@mui/material';
+import {
+  TextField,
+  Button,
+  Container,
+  Typography,
+  Box,
+  Alert,
+} from "@mui/material";
 
 const RegisterForm = () => {
   const [formData, setFormData] = useState({
@@ -28,7 +35,7 @@ const RegisterForm = () => {
     fetchCsrfToken();
 
     if (isAuthenticated) {
-      navigate('/');
+      navigate("/");
     }
   }, [isAuthenticated, navigate]);
 
@@ -43,13 +50,13 @@ const RegisterForm = () => {
       const sanitizedData = {
         username: DOMPurify.sanitize(formData.username.trim()),
         email: DOMPurify.sanitize(formData.email.trim()),
-        password: DOMPurify.sanitize(formData.password.trim())
+        password: DOMPurify.sanitize(formData.password.trim()),
       };
-      const response = await fetch('/api/auth/register', {
-        method: 'POST',
-        headers: { 
-          'Content-Type': 'application/json',
-          'CSRF-Token': csrfToken
+      const response = await fetch("/api/auth/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "CSRF-Token": csrfToken,
         },
         body: JSON.stringify(sanitizedData),
       });
@@ -57,20 +64,22 @@ const RegisterForm = () => {
       const data = await response.json();
 
       if (response.ok) {
-        setMessage(data.message || 'Registration successful!');
-        setFormData({ username: '', email: '', password: '' });
-        setTimeout(() => navigate('/login'), 2000);
+        setMessage(data.message || "Registration successful!");
+        setFormData({ username: "", email: "", password: "" });
+        setTimeout(() => navigate("/login"), 2000);
       } else {
         if (data.errors && data.errors.length > 0) {
-          const validationErrors = data.errors.map(error => error.msg).join(', ');
+          const validationErrors = data.errors
+            .map((error) => error.msg)
+            .join(", ");
           setMessage(validationErrors);
         } else {
-          setMessage(data.error || 'Registration failed. Please try again.');
+          setMessage(data.error || "Registration failed. Please try again.");
         }
       }
     } catch (error) {
-      console.error('Error during registration:', error);
-      setMessage('An error occurred. Please try again.');
+      console.error("Error during registration:", error);
+      setMessage("An error occurred. Please try again.");
     }
   };
 
@@ -90,7 +99,11 @@ const RegisterForm = () => {
             value={formData.username}
             onChange={handleChange}
             required
-            inputProps={{ pattern: "^[a-zA-Z0-9_]+$", title: "Username must contain only letters, numbers, and underscores." }}
+            inputProps={{
+              pattern: "^[a-zA-Z0-9_]+$",
+              title:
+                "Username must contain only letters, numbers, and underscores.",
+            }}
           />
           <TextField
             fullWidth
@@ -113,13 +126,27 @@ const RegisterForm = () => {
             value={formData.password}
             onChange={handleChange}
             required
-            inputProps={{ pattern: "^[a-zA-Z0-9!@#$%^&*()_+=-]+$", title: "Password must contain only letters, numbers, and special characters (!@#$%^&*()_+=-)." }}
+            inputProps={{
+              pattern: "^[a-zA-Z0-9!@#$%^&*()_+=-]+$",
+              title:
+                "Password must contain only letters, numbers, and special characters (!@#$%^&*()_+=-).",
+            }}
           />
-          <Button type="submit" variant="contained" color="primary" fullWidth sx={{ mt: 2 }}>
+          <Button
+            type="submit"
+            variant="contained"
+            color="primary"
+            fullWidth
+            sx={{ mt: 2 }}
+          >
             Register
           </Button>
         </form>
-        {message && <Alert severity="info" sx={{ mt: 2 }}>{message}</Alert>}
+        {message && (
+          <Alert severity="info" sx={{ mt: 2 }}>
+            {message}
+          </Alert>
+        )}
       </Box>
     </Container>
   );

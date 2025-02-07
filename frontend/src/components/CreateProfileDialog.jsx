@@ -1,7 +1,21 @@
-import React from 'react';
-import { Dialog, DialogActions, DialogContent, DialogTitle, Button, Box, TextField } from '@mui/material';
+import {
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Button,
+  Box,
+  TextField,
+} from "@mui/material";
+import PropTypes from 'prop-types';
 
-const CreateProfileDialog = ({ open, handleClose, formData, handleChange, handleCreateSubmit }) => (
+const CreateProfileDialog = ({
+  open,
+  handleClose,
+  formData,
+  handleChange,
+  handleCreateSubmit,
+}) => (
   <Dialog open={open} onClose={handleClose}>
     <DialogTitle>Create Profile</DialogTitle>
     <DialogContent>
@@ -50,5 +64,16 @@ const CreateProfileDialog = ({ open, handleClose, formData, handleChange, handle
     </DialogContent>
   </Dialog>
 );
+CreateProfileDialog.propTypes = {
+  open: PropTypes.bool.isRequired,
+  handleClose: PropTypes.func.isRequired,
+  formData: PropTypes.shape({
+    firstname: PropTypes.string.isRequired,
+    lastname: PropTypes.string.isRequired,
+    bio: PropTypes.string.isRequired,
+  }).isRequired,
+  handleChange: PropTypes.func.isRequired,
+  handleCreateSubmit: PropTypes.func.isRequired,
+};
 
 export default CreateProfileDialog;
