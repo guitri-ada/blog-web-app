@@ -1,5 +1,17 @@
 # blog-web-app
 
+## Outline
+1. [Team Contributions](#team-contributions)
+2. [Setup Instructions](#setup-instructions)
+3. [Features](#features)
+4. [Challenges and Solutions](#challenges-and-solutions)
+5. [Evidence](#evidence)
+   - [Feature Implementation Evidence](#1-feature-implementation-evidence)
+   - [Testing Evidence](#2-testing-evidence)
+   - [Security Enhancements Evidence](#3-security-enhancements-evidence)
+   - [Code Quality and Refactoring Evidence](#4-code-quality-and-refactoring-evidence)
+   - [CI/CD and Git Practices Evidence](#5-cicd-and-git-practices-evidence)
+
 ## Team Contributions
 - **Ross (33%)**: Responsible for User Authentication, including enabling user registration and login, implementing password hashing for secure storage, and applying CSRF protection and input sanitization to prevent security issues. (See [routes/authRoute.js](routes/authRoute.js) and [models/User.js](models/User.js).)
 - **Guillaume (33%)**: Responsible for Blog Post Management by restricting editing and deletion to post authors, implementing blog post creation, editing, and deletion. Also implemented CI/CD pipeline. (See [routes/blogPostRoute.js](routes/blogPostRoute.js) and [frontend/src/pages/BlogPosts.jsx](frontend/src/pages/BlogPosts.jsx).)
@@ -146,12 +158,42 @@
 
 ### 4. Code Quality and Refactoring Evidence
 The codebase is modularized following best practices and adheres to ESLint standards. Refactoring improved readability and maintainability.
+- **Description:**
+  - **Modularization:** The codebase is organized into modular components, hooks, pages, and contexts to ensure a clean and maintainable structure. This modular approach allows for easier testing, debugging, and future enhancements. Examples include:
+    - **Components:** Reusable UI components are located in the [frontend/src/components/](../frontend/src/components/) directory. Examples include [BlogPostCard.jsx](../frontend/src/components/BlogPostCard.jsx) and [NewBlogPostForm.jsx](../frontend/src/components/NewBlogPostForm.jsx).
+    - **Hooks:** Custom hooks for managing state and side effects are located in the [frontend/src/hooks/](../frontend/src/hooks/) directory. Examples include [useBlogPosts.jsx](../frontend/src/hooks/useBlogPosts.jsx) and [useAuth.jsx](../frontend/src/hooks/useAuth.jsx).
+    - **Pages:** Page components that represent different views of the application are located in the [frontend/src/pages/](../frontend/src/pages/) directory. Examples include [BlogPosts.jsx](../frontend/src/pages/BlogPosts.jsx) and [UserProfile.jsx](../frontend/src/pages/UserProfile.jsx).
+    - **Contexts:** Context providers for managing global state are located in the [frontend/src/contexts/](../frontend/src/contexts/) directory. Examples include [AuthContext.jsx](../frontend/src/contexts/AuthContext.jsx) and [ThemeContext.jsx](../frontend/src/contexts/ThemeContext.jsx).
+
+  - **Linting and Code Quality:** The project uses ESLint to enforce coding standards and maintain code quality. The linting configuration files are located in both the frontend and backend directories:
+    - **Frontend:** The ESLint configuration for the frontend is defined in [frontend/eslint.config.js](../frontend/eslint.config.js).
+    - **Backend:** The ESLint configuration for the backend is defined in [backend/.eslintrc.js](../backend/.eslintrc.js).
+    - **Commit Logs:** Adherence to linting standards and code quality is observed in the commit logs, where code reviews and automated linting checks ensure that the codebase remains clean and maintainable.
+
+  - **Refactoring:** Continuous refactoring efforts have been made to improve code readability, maintainability, and performance. This includes:
+    - **Code Reviews:** A rigorous code review process is documented in commit histories and pull requests. Each pull request undergoes thorough review to ensure adherence to best practices and coding standards.
+    - **Best Practices:** Adoption of best practices such as DRY (Don't Repeat Yourself) and modular design patterns. This ensures that the codebase is easy to understand, extend, and maintain.
+    - **Documentation:** Comprehensive documentation of code, including inline comments and README updates, to provide clear guidance on the functionality and usage of different components and modules.
+
 - **Implementation References:**  
   - Modular components: [frontend/src/components/](../frontend/src/components/), [frontend/src/hooks/](../frontend/src/hooks/), [frontend/src/pages/](../frontend/src/pages/), [frontend/src/contexts/](../frontend/src/contexts/)
   - Linting configuration: [frontend/eslint.config.js](../frontend/eslint.config.js), [backend/.eslintrc.js](../backend/.eslintrc.js) and adherence observed in commit logs.
 
 ### 5. CI/CD and Git Practices Evidence
 - **Description:** CI/CD workflows are configured via GitHub Actions to automate tests and code quality checks. Git practices demonstrate collaboration via branching and pull requests.
+  - **CI/CD Configuration:** The CI/CD pipeline is set up using GitHub Actions to ensure continuous integration and continuous deployment. This includes:
+    - **Automated Testing:** Every commit triggers a suite of tests to ensure that new changes do not break existing functionality. The configuration for this can be found in [/.github/workflows/ci.yml](../.github/workflows/ci.yml).
+    - **Linting and Code Quality Checks:** Automated linting checks are performed to enforce coding standards and maintain code quality. This is also configured in [/.github/workflows/ci.yml](../.github/workflows/ci.yml).
+
+  - **Git Practices:** The project follows best practices for version control and collaboration using Git. This includes:
+    - **Branching Strategy:** A clear branching strategy is followed to manage feature development, bug fixes, and releases. The main branches include `main` for production-ready code, and feature branches for individual features or bug fixes.
+    - **Pull Requests:** All changes are made through pull requests, which are reviewed by team members before being merged. This ensures that code quality is maintained and that multiple perspectives are considered. 
+    - **Commit History:** The commit history provides a detailed log of changes made to the codebase, including the rationale behind each change. This helps in tracking the evolution of the project and understanding the context of each change.
+
+  - **Code Reviews:** A rigorous code review process is in place to ensure that all changes are thoroughly reviewed before being merged. This process includes:
+    - **Automated Checks:** Automated checks for tests, linting, and code quality are run on every pull request.
+    - **Peer Reviews:** Team members review each pull request, providing feedback and suggestions for improvement. This collaborative approach helps in maintaining high code quality and catching potential issues early.
+
 - **Implementation References:**  
-  - CI/CD configuration: [/.github/workflows/ci.yml](../.github/workflows/ci.yml), [/.github/workflows/deploy.yml](../.github/workflows/deploy.yml)
+  - CI/CD configuration: [/.github/workflows/ci.yml](../.github/workflows/ci.yml)
   - Git commit history and branching strategy: Refer to repository commit logs and pull request discussions. Evidence of branching strategy can be seen in the [branches](../branches) and [pull requests](../pulls) sections of the repository.
