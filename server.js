@@ -9,14 +9,18 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 const ATLAS_URI = process.env.ATLAS_URI;
 
-// Connect to MongoDB using Mongoose
-mongoose
-  .connect(ATLAS_URI)
-  .then(() => console.log("Connected to MongoDB Atlas!"))
-  .catch((error) => {
-    console.error("MongoDB connection error:", error);
-    process.exit(1);
-  });
+// Only connect to MongoDB if not in test mode
+if (process.env.NODE_ENV !== "test") {
+  mongoose
+    .connect(ATLAS_URI)
+    .then(() => console.log("Connected to MongoDB Atlas!"))
+    .catch((error) => {
+      console.error("MongoDB connection error:", error);
+      process.exit(1);
+    });
+} else {
+  console.log("Running in test environment. Skipping MongoDB connection.");
+}
 
 // Middleware
 app.use(express.json()); // Parse JSON bodies
