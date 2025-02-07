@@ -1,6 +1,6 @@
-import { TextEncoder, TextDecoder } from 'util';
-import 'whatwg-fetch';
-import '@testing-library/jest-dom';
+const { TextEncoder, TextDecoder } = require('util');
+require('whatwg-fetch');
+require('@testing-library/jest-dom');
 
 global.TextEncoder = TextEncoder;
 global.TextDecoder = TextDecoder;
