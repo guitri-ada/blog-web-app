@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const { body, validationResult } = require("express-validator");
 const BlogPost = require("../models/BlogPost");
-const authenticate = require("../middleware/authenticate");
+const authenticate = require("../middleware/authenticate");  // Import authenticate for JWT-based auth
 
 // Helper function to handle validation errors
 const handleValidationErrors = (req, res, next) => {
@@ -36,7 +36,8 @@ router.get('/:id', authenticate, async (req, res) => {
 
 // Create a new blog post
 router.post(
-  '/', authenticate,
+  '/',
+  authenticate, // Only authentication is required here
   [
     body("title").notEmpty().withMessage("Title is required").trim().escape(),
     body("content")
@@ -60,7 +61,7 @@ router.post(
     } catch (error) {
       res.status(500).json({ error: "Failed to create blog post" });
     }
-  },
+  }
 );
 
 // Delete a blog post by its ID
@@ -76,7 +77,8 @@ router.delete('/:id', authenticate, async (req, res) => {
 
 // Update a blog post by its ID
 router.put(
-  '/:id', authenticate,
+  '/:id', 
+  authenticate, // Only authentication is required here
   [
     body("title").notEmpty().withMessage("Title is required").trim().escape(),
     body("content")
@@ -97,16 +99,15 @@ router.put(
       const updatedPost = await BlogPost.findByIdAndUpdate(
         req.params.id,
         { title, content },
-        { new: true },
+        { new: true }
       );
 
-      if (!updatedPost)
-        return res.status(404).json({ error: "Post not found" });
+      if (!updatedPost) return res.status(404).json({ error: "Post not found" });
       res.json(updatedPost);
     } catch (error) {
       res.status(500).json({ error: "Failed to update blog post" });
     }
-  },
+  }
 );
 
 module.exports = router;
