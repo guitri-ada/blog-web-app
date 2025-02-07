@@ -7,18 +7,18 @@ module.exports = async () => {
         displayName: "frontend",
         testEnvironment: "jsdom",
         testMatch: ["<rootDir>/frontend/**/*.{test.js,test.jsx}"],
-        setupFilesAfterEnv: ["<rootDir>/jest.config.js"],
+        setupFilesAfterEnv: ["<rootDir>/tests/setup.js"],
       },
       {
         displayName: "backend",
         testEnvironment: "node",
         testMatch: ["<rootDir>/tests/**/*.test.js"],
-        setupFilesAfterEnv: ["<rootDir>/tests/setup.js"],
-      },
+        setupFilesAfterEnv: ["<rootDir>/tests/setup.js"]
+      }
     ],
     transform: {
-      "^.+\\.(js|jsx|ts|tsx)$": "babel-jest",
+      "^.+\\.(js|jsx|ts|tsx)$": "babel-jest"
     },
-    testEnvironment: "jsdom",
+    testEnvironment: "jsdom"
   };
 };
